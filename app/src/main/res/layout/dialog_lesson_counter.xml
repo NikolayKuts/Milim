@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="20dp"
+    android:background="@drawable/dialog_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewCounterTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Witch word would you like go to?"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="10"
+        android:textColor="#B7E5FA"
+        android:background="@null"
+        android:inputType="number"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewCounterTitle" />
+
+    <Button
+        android:id="@+id/button_go_to_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="go to"
+        android:minHeight="30dp"
+        android:layout_marginTop="10dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background"
+        app:layout_constraintStart_toStartOf="@+id/editTextCounter"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCounter" />
+
+    <Button
+        android:id="@+id/buttonClearCounter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear"
+        android:minHeight="30dp"
+        android:layout_marginTop="10dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background"
+        app:layout_constraintEnd_toEndOf="@+id/editTextCounter"
+        app:layout_constraintTop_toBottomOf="@+id/editTextCounter" />
+</androidx.constraintlayout.widget.ConstraintLayout>

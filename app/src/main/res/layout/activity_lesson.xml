@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/font"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lesson_activity_background"
+    tools:context=".screens.lesson.LessonActivity">
+
+    <Button
+        android:id="@+id/buttonNext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_button_background"
+        android:onClick="onNextClick"
+        android:text="Next"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonBack"
+        app:layout_constraintStart_toEndOf="@id/buttonBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/buttonBack"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/buttonBack"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:background="@drawable/dialog_button_background"
+        android:onClick="onBackClick"
+        android:text="Back"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/buttonNext"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewWord"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="#FFEB3B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.38" />
+
+    <TextView
+        android:id="@+id/textViewTitleDeck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:layout_marginStart="10dp"
+        android:paddingEnd="5dp"
+        android:fontFamily="@font/arapey_italic"
+        android:text="deck:"
+        android:textColor="#D1D1D1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewDeckName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#A8DC6C"
+        app:layout_constraintBottom_toBottomOf="@+id/textViewTitleDeck"
+        app:layout_constraintStart_toEndOf="@+id/textViewTitleDeck"
+        app:layout_constraintTop_toTopOf="@+id/textViewTitleDeck"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="deck name is here" />
+
+    <LinearLayout
+        android:id="@+id/linearLayoutConter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textViewDeckName">
+
+        <TextView
+            android:id="@+id/textViewQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#D3C86D"
+            android:layout_weight="1"
+            android:text="Quant." />
+
+        <TextView
+            android:id="@+id/textViewSlash"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ffffff"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:text="|" />
+
+        <TextView
+            android:id="@+id/textViewProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#72BDDF"
+            android:layout_weight="1"
+            android:text="Progr." />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="onMainButtonClick"
+        app:backgroundTint="#C9CF88"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutConter"
+        app:maxImageSize="35dp"
+        app:srcCompat="@drawable/ic_fingerprint_24"
+        app:tint="#954C35"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:clickable="true"
+        android:onClick="onDeleteButtonClick"
+        android:visibility="invisible"
+        app:backgroundTint="#D6AA68"
+        app:fabCustomSize="35dp"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMain"
+        app:layout_constraintStart_toStartOf="@+id/buttonMain"
+        app:layout_constraintTop_toBottomOf="@+id/buttonMain"
+        app:maxImageSize="18dp"
+        app:srcCompat="@drawable/ic_delete_24"
+        app:tint="#6675C8"
+        tools:ignore="VectorDrawableCompat" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="onAddWordButtonClick"
+        android:visibility="invisible"
+        app:backgroundTint="#7ECCD6"
+        app:fabCustomSize="35dp"
+        app:layout_constraintStart_toStartOf="@+id/buttonDelete"
+
+        app:layout_constraintTop_toBottomOf="@+id/buttonDelete"
+        app:srcCompat="@drawable/ic_add_24"
+        app:tint="#BD6660"
+        tools:ignore="VectorDrawableCompat" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
