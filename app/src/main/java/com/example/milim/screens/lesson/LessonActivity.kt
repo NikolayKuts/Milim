@@ -16,13 +16,14 @@ import com.example.milim.R
 import com.example.milim.databinding.ActivityLessonBinding
 import com.example.milim.databinding.DialogLessonCounterBinding
 import com.example.milim.databinding.DialogWordDeletingBinding
+import com.example.milim.fragments.AdditionWordFragment
 import com.example.milim.pojo.Deck
 import com.example.milim.pojo.Word
 import com.example.milim.screens.edition_word.EditWordActivity
-import com.example.milim.screens.adding_word.AddWordActivity
+//import com.example.milim.screens.adding_word.AddWordActivity
 import com.example.milim.screens.main.MainPresenter
 
-class LessonActivity : AppCompatActivity() {
+class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmentClosedListener {
     private lateinit var binding: ActivityLessonBinding
     private lateinit var deck: Deck
     private var deckId = -1
@@ -32,6 +33,7 @@ class LessonActivity : AppCompatActivity() {
     private lateinit var words: MutableList<Word>
 
     companion object {
+        private const val TAG_ADDITION_WORD_DIALOG = "addition_word_dialog"
         private const val TAG_DECK_ID = "deck_id"
         fun newIntent(context: Context, deck_id: Int): Intent {
             return Intent(context, LessonActivity::class.java).apply { putExtra(TAG_DECK_ID, deck_id) }
@@ -84,6 +86,10 @@ class LessonActivity : AppCompatActivity() {
                 true
             }
         }
+    }
+
+    override fun refreshData() {
+        onResume()
     }
 
     fun onNextClick(view: View) {
@@ -165,8 +171,12 @@ class LessonActivity : AppCompatActivity() {
     }
 
     fun onAddWordButtonClick(view: View) {
-        startActivity(AddWordActivity.newIntent(view.context, deckId))
+//        startActivity(AddWordActivity.newIntent(view.context, deckId))
+
+        val dialog = AdditionWordFragment.newInstance(deckId)
+        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
     }
+
 
     private fun showWordDeletingDialog(view: View) {
         val dialog = Dialog(view.context)
@@ -275,7 +285,7 @@ class LessonActivity : AppCompatActivity() {
     }
 
     private fun showEditionWordDialog(context: Context) {
-        val dialog = Dialog(context)
-        val bindig
+        val dialog = AdditionWordFragment()
+        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
     }
 }
