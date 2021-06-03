@@ -111,8 +111,12 @@ class MainPresenter(private val context: Context) {
     }
 
     fun deleteWord(word: Word) {
+        deleteWord(word.wordId)
+    }
+
+    fun deleteWord(wordId: Int) {
         val asynchronium = Asynchronium<Int, Unit>()
-        asynchronium.execute(word.wordId) { database.wordsDao().deleteWordById(it) }
+        asynchronium.execute(wordId) { database.wordsDao().deleteWordById(it) }
         updateDecks()
     }
 }

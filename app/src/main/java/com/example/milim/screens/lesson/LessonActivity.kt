@@ -17,13 +17,17 @@ import com.example.milim.databinding.ActivityLessonBinding
 import com.example.milim.databinding.DialogLessonCounterBinding
 import com.example.milim.databinding.DialogWordDeletingBinding
 import com.example.milim.fragments.AdditionWordFragment
+import com.example.milim.fragments.DeletingWordFragment
 import com.example.milim.pojo.Deck
 import com.example.milim.pojo.Word
 import com.example.milim.screens.edition_word.EditWordActivity
 //import com.example.milim.screens.adding_word.AddWordActivity
 import com.example.milim.screens.main.MainPresenter
 
-class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmentClosedListener {
+class LessonActivity : AppCompatActivity(),
+    AdditionWordFragment.OnDialogFragmentClosedListener,
+    DeletingWordFragment.OnDialogFragmentClosedListener {
+
     private lateinit var binding: ActivityLessonBinding
     private lateinit var deck: Deck
     private var deckId = -1
@@ -34,9 +38,15 @@ class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmen
 
     companion object {
         private const val TAG_ADDITION_WORD_DIALOG = "addition_word_dialog"
+        private const val TAG_DELETING_WORD_DIALOG = "deleting_word_dialog"
         private const val TAG_DECK_ID = "deck_id"
         fun newIntent(context: Context, deck_id: Int): Intent {
-            return Intent(context, LessonActivity::class.java).apply { putExtra(TAG_DECK_ID, deck_id) }
+            return Intent(context, LessonActivity::class.java).apply {
+                putExtra(
+                    TAG_DECK_ID,
+                    deck_id
+                )
+            }
         }
     }
 
@@ -88,8 +98,16 @@ class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmen
         }
     }
 
-    override fun refreshData() {
+    override fun onAddWordRefreshData() {
         onResume()
+    }
+
+    override fun onDeleteWordRefreshData() {
+        onConfirmDeleting()
+        updateLessonProgress()
+        saveProgress()
+        updateWordList()
+        setViewContent()
     }
 
     fun onNextClick(view: View) {
@@ -167,7 +185,14 @@ class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmen
     }
 
     fun onDeleteButtonClick(view: View) {
-        showWordDeletingDialog(view)
+        //showWordDeletingDialog(view)
+        if (words.isEmpty()) {
+            Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            val dialog = DeletingWordFragment.newInstance(words[wordIndex].wordId)
+            dialog.show(supportFragmentManager, TAG_DELETING_WORD_DIALOG)
+        }
     }
 
     fun onAddWordButtonClick(view: View) {
@@ -257,7 +282,10 @@ class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmen
     }
 
     private fun showWordIndexProgress() {
-        Log.i("my_test", "showWordIndexProgress: word index -> $wordIndex progress -> $lessonProgress")
+        Log.i(
+            "my_test",
+            "showWordIndexProgress: word index -> $wordIndex progress -> $lessonProgress"
+        )
     }
 
     private fun showCounterDialog(context: Context) {
@@ -279,7 +307,8 @@ class LessonActivity : AppCompatActivity(), AdditionWordFragment.OnDialogFragmen
                 saveProgress()
                 dialog.dismiss()
             } else {
-                Toast.makeText(context, "There's not word with such number", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "There's not word with such number", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

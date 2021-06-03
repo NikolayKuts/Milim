@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import com.example.milim.R
 import com.example.milim.databinding.DialogFragmentAdditionWordBinding
 import com.example.milim.screens.main.MainPresenter
 
@@ -29,7 +28,7 @@ class AdditionWordFragment : DialogFragment() {
     }
 
     interface OnDialogFragmentClosedListener {
-        fun refreshData()
+        fun onAddWordRefreshData()
     }
 
     override fun onAttach(context: Context) {
@@ -63,7 +62,7 @@ class AdditionWordFragment : DialogFragment() {
                 insetWord(it.context, newWord, deckId)
                 binding.editTextNewWord.setText("")
                 Toast.makeText(it.context, "The word has been added", Toast.LENGTH_SHORT).show()
-                listener?.refreshData()
+                listener.onAddWordRefreshData()
                 dismiss()
             } else {
                 Toast.makeText(it.context, "Type a word", Toast.LENGTH_SHORT).show()
