@@ -9,11 +9,11 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.R
-import com.example.milim.databinding.DialogFragmentAddWordBinding
+import com.example.milim.databinding.DialogFragmentAdditionWordBinding
 import com.example.milim.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
-    private lateinit var binding: DialogFragmentAddWordBinding
+    private lateinit var binding: DialogFragmentAdditionWordBinding
     private lateinit var listener: OnDialogFragmentClosedListener
     private var deckId = -1;
 
@@ -42,7 +42,8 @@ class AdditionWordFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DialogFragmentAddWordBinding.inflate(inflater, container, false)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        binding = DialogFragmentAdditionWordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
