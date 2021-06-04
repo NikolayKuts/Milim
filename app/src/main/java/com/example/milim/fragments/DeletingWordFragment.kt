@@ -11,7 +11,9 @@ import com.example.milim.databinding.DialogFragmentDeletingWordBinding
 import com.example.milim.screens.main.MainPresenter
 
 class DeletingWordFragment : DialogFragment() {
-    private lateinit var binding: DialogFragmentDeletingWordBinding
+    private var _binding: DialogFragmentDeletingWordBinding? = null
+    private val binding
+    get() = _binding!!
     private lateinit var listener: OnDialogFragmentClosedListener
     private var wordId = -1
 
@@ -40,7 +42,7 @@ class DeletingWordFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        binding = DialogFragmentDeletingWordBinding.inflate(inflater, container, false)
+        _binding = DialogFragmentDeletingWordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -59,7 +61,11 @@ class DeletingWordFragment : DialogFragment() {
         binding.buttonCancelDeleting.setOnClickListener {
             dismiss()
         }
+    }
 
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 
     private fun deleteWord(context: Context) {

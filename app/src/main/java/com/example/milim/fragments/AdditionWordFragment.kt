@@ -12,7 +12,9 @@ import com.example.milim.databinding.DialogFragmentAdditionWordBinding
 import com.example.milim.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
-    private lateinit var binding: DialogFragmentAdditionWordBinding
+    private var _binding: DialogFragmentAdditionWordBinding? = null
+    val binding
+    get() = _binding!!
     private lateinit var listener: OnDialogFragmentClosedListener
     private var deckId = -1;
 
@@ -42,7 +44,7 @@ class AdditionWordFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        binding = DialogFragmentAdditionWordBinding.inflate(inflater, container, false)
+        _binding = DialogFragmentAdditionWordBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -68,6 +70,11 @@ class AdditionWordFragment : DialogFragment() {
                 Toast.makeText(it.context, "Type a word", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 
     private fun insetWord(context: Context, newWord: String, deckId: Int) {
