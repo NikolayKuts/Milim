@@ -1,54 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp"
     android:background="@drawable/dialog_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:padding="20dp">
 
-    <EditText
-        android:id="@+id/editTextNewWord"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_text_new_word_wrapper"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:textColor="#ffffff"
         android:hint="Type a word"
-        android:textStyle="italic"
-        android:textColorHint="@color/hint"
-        android:gravity="center"
-        android:background="@null"
-        android:inputType="textMultiLine"
+        app:endIconTint="#BDBDBD"
+        app:hintTextColor="@color/hint"
+        app:boxStrokeColor="#85C4D6AE"
+        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editTextNewWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:ems="10"
+            android:textCursorDrawable="@null"
+            android:inputType="textMultiLine"
+            android:textColor="#ffffff"
+            android:textColorHint="@color/hint"
+            android:textStyle="italic" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/buttonAddWord"
-        app:layout_constraintStart_toStartOf="@+id/editTextNewWord"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNewWord"
-        android:minHeight="30dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:backgroundTint="@null"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/dialog_button_background"
+        android:minHeight="30dp"
         android:onClick="onInsertWordButtonClick"
-        android:text="Add" />
+        android:text="Add"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toStartOf="@+id/buttonCancelWordAdding"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_new_word_wrapper" />
 
     <Button
         android:id="@+id/buttonCancelWordAdding"
-        app:layout_constraintEnd_toEndOf="@+id/editTextNewWord"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNewWord"
         android:layout_width="wrap_content"
-        android:minHeight="30dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        app:backgroundTint="@null"
         android:background="@drawable/dialog_button_background"
+        android:minHeight="30dp"
         android:onClick="onCancelWordAddingClick"
-        android:text="Cancel" />
+        android:text="Cancel"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/buttonAddWord"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_new_word_wrapper" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
