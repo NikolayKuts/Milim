@@ -3,14 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp"
+    android:background="@drawable/dialog_background">
 
     <Button
         android:id="@+id/buttonConfirmWordDeleting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minHeight="30dp"
+        android:layout_marginEnd="10dp"
         android:text="Delete"
+        android:layout_marginTop="20dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancelDeleting"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleDeleteDialog" />
@@ -19,7 +26,12 @@
         android:id="@+id/buttonCancelDeleting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:minHeight="30dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background"
         android:text="Cancel"
+        android:layout_marginTop="20dp"
         app:layout_constraintStart_toEndOf="@+id/buttonConfirmWordDeleting"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitleDeleteDialog" />
@@ -29,7 +41,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Do you like to delete "
+        android:text="Do you like to delete?"
+        android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

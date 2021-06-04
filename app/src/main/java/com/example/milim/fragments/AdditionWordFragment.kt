@@ -13,7 +13,7 @@ import com.example.milim.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
     private var _binding: DialogFragmentAdditionWordBinding? = null
-    val binding
+    private val binding
     get() = _binding!!
     private lateinit var listener: OnDialogFragmentClosedListener
     private var deckId = -1;
@@ -43,6 +43,7 @@ class AdditionWordFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentAdditionWordBinding.inflate(inflater, container, false)
         return binding.root

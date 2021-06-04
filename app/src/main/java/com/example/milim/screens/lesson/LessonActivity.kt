@@ -15,7 +15,6 @@ import androidx.core.view.isVisible
 import com.example.milim.R
 import com.example.milim.databinding.ActivityLessonBinding
 import com.example.milim.databinding.DialogLessonCounterBinding
-import com.example.milim.databinding.DialogWordDeletingBinding
 import com.example.milim.fragments.AdditionWordFragment
 import com.example.milim.fragments.DeletingWordFragment
 import com.example.milim.pojo.Deck
@@ -203,30 +202,30 @@ class LessonActivity : AppCompatActivity(),
     }
 
 
-    private fun showWordDeletingDialog(view: View) {
-        val dialog = Dialog(view.context)
-        dialog.setContentView(R.layout.dialog_deck_deleting)
-        val binding = DialogWordDeletingBinding.inflate(LayoutInflater.from(view.context))
-        dialog.setContentView(binding.root)
-        if (words.isEmpty()) {
-            Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
-                .show()
-        } else {
-            dialog.show()
-        }
-
-        binding.buttonConfirmWordDeleting.setOnClickListener {
-            onConfirmDeleting()
-            updateLessonProgress()
-            saveProgress()
-            updateWordList()
-            setViewContent()
-            dialog.dismiss()
-        }
-        binding.buttonCancelDeleting.setOnClickListener {
-            dialog.dismiss()
-        }
-    }
+//    private fun showWordDeletingDialog(view: View) {
+//        val dialog = Dialog(view.context)
+//        dialog.setContentView(R.layout.dialog_deck_deleting)
+//        val binding = DialogWordDeletingBinding.inflate(LayoutInflater.from(view.context))
+//        dialog.setContentView(binding.root)
+//        if (words.isEmpty()) {
+//            Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
+//                .show()
+//        } else {
+//            dialog.show()
+//        }
+//
+//        binding.buttonConfirmWordDeleting.setOnClickListener {
+//            onConfirmDeleting()
+//            updateLessonProgress()
+//            saveProgress()
+//            updateWordList()
+//            setViewContent()
+//            dialog.dismiss()
+//        }
+//        binding.buttonCancelDeleting.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//    }
 
     private fun onConfirmDeleting() {
         if (words.size > 1 && lessonProgress == 1) {

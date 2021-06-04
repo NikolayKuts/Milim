@@ -42,6 +42,7 @@ class DeletingWordFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentDeletingWordBinding.inflate(inflater, container, false)
         return binding.root
     }
