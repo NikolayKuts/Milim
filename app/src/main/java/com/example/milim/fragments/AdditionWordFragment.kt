@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import com.example.milim.databinding.DialogFragmentAdditionWordBinding
+import com.example.milim.databinding.DialogFragmentWordAdditionBinding
 import com.example.milim.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
-    private var _binding: DialogFragmentAdditionWordBinding? = null
+    private var _binding: DialogFragmentWordAdditionBinding? = null
     private val binding
     get() = _binding!!
     private lateinit var listener: OnDialogFragmentClosedListener
@@ -45,7 +45,7 @@ class AdditionWordFragment : DialogFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        _binding = DialogFragmentAdditionWordBinding.inflate(inflater, container, false)
+        _binding = DialogFragmentWordAdditionBinding.inflate(inflater, container, false)
         return binding.root
     }
 

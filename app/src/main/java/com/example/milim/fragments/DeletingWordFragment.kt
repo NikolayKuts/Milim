@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
-import com.example.milim.databinding.DialogFragmentDeletingWordBinding
+import com.example.milim.databinding.DialogFragmentWordDeletingBinding
 import com.example.milim.screens.main.MainPresenter
 
 class DeletingWordFragment : DialogFragment() {
-    private var _binding: DialogFragmentDeletingWordBinding? = null
+    private var _binding: DialogFragmentWordDeletingBinding? = null
     private val binding
     get() = _binding!!
     private lateinit var listener: OnDialogFragmentClosedListener
@@ -43,7 +43,7 @@ class DeletingWordFragment : DialogFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        _binding = DialogFragmentDeletingWordBinding.inflate(inflater, container, false)
+        _binding = DialogFragmentWordDeletingBinding.inflate(inflater, container, false)
         return binding.root
     }
 

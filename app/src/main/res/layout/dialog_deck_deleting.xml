@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:minHeight="20dp"
         android:text="Delete"
-        android:textColor="#E49379"
+        android:textColor="@color/red_stroke_button"
         android:layout_marginTop="20dp"
         app:backgroundTint="@null"
-        android:background="@drawable/dialog_button_background"
+        android:background="@drawable/dialog_button_background_red_stroke"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewDeckDeletingTitle" />
 

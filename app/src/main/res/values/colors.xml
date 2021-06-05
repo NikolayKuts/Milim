@@ -12,4 +12,5 @@
     <color name="deck_item_background">#3CBBE6EC</color>
     <color name="dialog_background">#B08391AC</color>
     <color name="hint">#B3C0D6D8</color>
+    <color name="red_stroke_button">#F7786F</color>
 </resources>
