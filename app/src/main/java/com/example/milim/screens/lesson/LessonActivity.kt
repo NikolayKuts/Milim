@@ -16,15 +16,17 @@ import com.example.milim.databinding.ActivityLessonBinding
 import com.example.milim.databinding.DialogLessonCounterBinding
 import com.example.milim.fragments.AdditionWordFragment
 import com.example.milim.fragments.DeletingWordFragment
+import com.example.milim.fragments.EditionWordFragment
+import com.example.milim.interfaces.OnActionPerformedUpdater
 import com.example.milim.pojo.Deck
 import com.example.milim.pojo.Word
-import com.example.milim.screens.edition_word.EditWordActivity
 //import com.example.milim.screens.adding_word.AddWordActivity
 import com.example.milim.screens.main.MainPresenter
 
 class LessonActivity : AppCompatActivity(),
-    AdditionWordFragment.OnDialogFragmentClosedListener,
-    DeletingWordFragment.OnDialogFragmentClosedListener {
+    DeletingWordFragment.ListenerCallback,
+    EditionWordFragment.ListenerCallback,
+    OnActionPerformedUpdater {
 
     private lateinit var binding: ActivityLessonBinding
     private lateinit var deck: Deck
@@ -35,8 +37,9 @@ class LessonActivity : AppCompatActivity(),
     private lateinit var words: MutableList<Word>
 
     companion object {
-        private const val TAG_ADDITION_WORD_DIALOG = "addition_word_dialog"
-        private const val TAG_DELETING_WORD_DIALOG = "deleting_word_dialog"
+        private const val TAG_WORD_ADDITION_DIALOG = "word_addition_dialog"
+        private const val TAG_WORD_DELETING_DIALOG = "word_deleting_dialog"
+        private const val TAG_WORD_EDITION_DIALOG = "word_edition_dialog"
         private const val TAG_DECK_ID = "deck_id"
         fun newIntent(context: Context, deck_id: Int): Intent {
             return Intent(context, LessonActivity::class.java).apply {
@@ -67,7 +70,7 @@ class LessonActivity : AppCompatActivity(),
 
         binding.textViewDeckName.text = deckName
         binding.textViewQuantity.text = words.size.toString()
-        binding.linearLayoutConter.setOnLongClickListener {
+        binding.linearLayoutCounter.setOnLongClickListener {
             showCounterDialog(it.context)
             true
         }
@@ -86,17 +89,19 @@ class LessonActivity : AppCompatActivity(),
         val presenter = MainPresenter(applicationContext)
         updateWordList()
         deck = presenter.getDeckById(deckId)
-        setLessonProgressOnStartLesson()
+//        setLessonProgressOnStartLesson()
         setViewContent()
         if (words.isNotEmpty()) {
             binding.textViewWord.setOnLongClickListener {
-                startActivity(EditWordActivity.newIntent(it.context, words[wordIndex].wordId))
+                val dialog = EditionWordFragment.newInstance(words[wordIndex])
+                dialog.show(supportFragmentManager, TAG_WORD_EDITION_DIALOG)
+                //startActivity(EditWordActivity.newIntent(it.context, words[wordIndex].wordId))
                 true
             }
         }
     }
 
-    override fun onAddWordRefreshData() {
+    override fun onActionPerformedRefresh() {
         onResume()
     }
 
@@ -118,11 +123,8 @@ class LessonActivity : AppCompatActivity(),
         showWordIndexProgress()
     }
 
-    override fun onDeleteWordRefreshData() {
-        onConfirmWordDeleting()
-        updateLessonProgress()
-        updateWordList()
-        setViewContent()
+    override fun onConfirmChanges(wordObject: Word) {
+        MainPresenter(applicationContext).updateWord(wordObject)
     }
 
     fun onNextClick(view: View) {
@@ -205,13 +207,13 @@ class LessonActivity : AppCompatActivity(),
                 .show()
         } else {
             val dialog = DeletingWordFragment.newInstance(words[wordIndex].wordId)
-            dialog.show(supportFragmentManager, TAG_DELETING_WORD_DIALOG)
+            dialog.show(supportFragmentManager, TAG_WORD_DELETING_DIALOG)
         }
     }
 
     fun onAddWordButtonClick(view: View) {
         val dialog = AdditionWordFragment.newInstance(deckId)
-        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
+        dialog.show(supportFragmentManager, TAG_WORD_ADDITION_DIALOG)
     }
 
     private fun updateWordList() {

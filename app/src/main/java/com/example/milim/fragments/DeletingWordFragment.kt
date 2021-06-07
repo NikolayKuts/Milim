@@ -8,13 +8,14 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentWordDeletingBinding
+import com.example.milim.interfaces.OnActionPerformedUpdater
 
 class DeletingWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordDeletingBinding? = null
     private val binding
     get() = _binding!!
-    private lateinit var listener: OnDialogFragmentClosedListener
-    private var wordId = -1
+    private lateinit var listener: ListenerCallback
+    private lateinit var dataUpdater: OnActionPerformedUpdater
 
     companion object {
         private const val TAG_WORD_ID = "word_id"
@@ -26,14 +27,16 @@ class DeletingWordFragment : DialogFragment() {
             }
         }
     }
-    interface OnDialogFragmentClosedListener {
-        fun onDeleteWordRefreshData()
+
+    interface ListenerCallback {
+        //fun onDeleteWordRefreshData()
         fun onConfirmWordDeleting()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as OnDialogFragmentClosedListener
+        listener = context as ListenerCallback
+        dataUpdater = context as OnActionPerformedUpdater
     }
 
     override fun onCreateView(
@@ -43,20 +46,16 @@ class DeletingWordFragment : DialogFragment() {
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-        _binding = DialogFragmentWordDeletingBinding.inflate(inflater, container, false)
+        _binding = DialogFragmentWordDeletingBinding
+            .inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            wordId = it.getInt(TAG_WORD_ID)
-        }
-
         binding.buttonConfirmWordDeleting.setOnClickListener {
-            //deleteWord(view.context)
             listener.onConfirmWordDeleting()
-            listener.onDeleteWordRefreshData()
+            dataUpdater.onActionPerformedRefresh()
             dismiss()
         }
 
@@ -70,8 +69,4 @@ class DeletingWordFragment : DialogFragment() {
         super.onDestroy()
     }
 
-//    private fun deleteWord(context: Context) {
-//        val presenter = MainPresenter(context)
-//        presenter.deleteWord(wordId)
-//    }
 }
