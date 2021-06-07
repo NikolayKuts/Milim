@@ -56,8 +56,9 @@ class MainPresenter(private val context: Context) {
             val decks = database.decksDao().getAllDecks()
             for (deck in decks) {
                 val quantityWords = database.wordsDao().getQuantityWordsInDeck(deck.id)
-                val progress = when (deck.progress) {
-                    0 -> 1
+                val progress = when {
+                    quantityWords == 0 -> 0
+                    quantityWords == 1 && deck.progress == 0 -> 1
                     else -> deck.progress
                 }
                 val updatedDeck = Deck(deck.id, deck.name, quantityWords, progress)

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentWordDeletingBinding
-import com.example.milim.screens.main.MainPresenter
 
 class DeletingWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordDeletingBinding? = null
@@ -29,6 +28,7 @@ class DeletingWordFragment : DialogFragment() {
     }
     interface OnDialogFragmentClosedListener {
         fun onDeleteWordRefreshData()
+        fun onConfirmWordDeleting()
     }
 
     override fun onAttach(context: Context) {
@@ -54,7 +54,8 @@ class DeletingWordFragment : DialogFragment() {
         }
 
         binding.buttonConfirmWordDeleting.setOnClickListener {
-            deleteWord(view.context)
+            //deleteWord(view.context)
+            listener.onConfirmWordDeleting()
             listener.onDeleteWordRefreshData()
             dismiss()
         }
@@ -69,8 +70,8 @@ class DeletingWordFragment : DialogFragment() {
         super.onDestroy()
     }
 
-    private fun deleteWord(context: Context) {
-        val presenter = MainPresenter(context)
-        presenter.deleteWord(wordId)
-    }
+//    private fun deleteWord(context: Context) {
+//        val presenter = MainPresenter(context)
+//        presenter.deleteWord(wordId)
+//    }
 }

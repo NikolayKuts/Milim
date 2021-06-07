@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -101,10 +100,27 @@ class LessonActivity : AppCompatActivity(),
         onResume()
     }
 
+    override fun onConfirmWordDeleting() {
+        if (words.size > 1 && lessonProgress == 1) {
+            deleteWord((words[wordIndex]))
+        } else if (words.size > 1 && lessonProgress == words.size) {
+            deleteWord(words[wordIndex])
+            lessonProgress--
+            wordIndex--
+        } else if (words.size > 1 && lessonProgress > 1) {
+            deleteWord(words[wordIndex])
+            lessonProgress--
+        } else if (words.size == 1) {
+            deleteWord(words[wordIndex])
+            wordIndex = 0
+            lessonProgress = 0
+        }
+        showWordIndexProgress()
+    }
+
     override fun onDeleteWordRefreshData() {
-        onConfirmDeleting()
+        onConfirmWordDeleting()
         updateLessonProgress()
-        saveProgress()
         updateWordList()
         setViewContent()
     }
@@ -184,7 +200,6 @@ class LessonActivity : AppCompatActivity(),
     }
 
     fun onDeleteButtonClick(view: View) {
-        //showWordDeletingDialog(view)
         if (words.isEmpty()) {
             Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
                 .show()
@@ -195,54 +210,8 @@ class LessonActivity : AppCompatActivity(),
     }
 
     fun onAddWordButtonClick(view: View) {
-//        startActivity(AddWordActivity.newIntent(view.context, deckId))
-
         val dialog = AdditionWordFragment.newInstance(deckId)
         dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
-    }
-
-
-//    private fun showWordDeletingDialog(view: View) {
-//        val dialog = Dialog(view.context)
-//        dialog.setContentView(R.layout.dialog_deck_deleting)
-//        val binding = DialogWordDeletingBinding.inflate(LayoutInflater.from(view.context))
-//        dialog.setContentView(binding.root)
-//        if (words.isEmpty()) {
-//            Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
-//                .show()
-//        } else {
-//            dialog.show()
-//        }
-//
-//        binding.buttonConfirmWordDeleting.setOnClickListener {
-//            onConfirmDeleting()
-//            updateLessonProgress()
-//            saveProgress()
-//            updateWordList()
-//            setViewContent()
-//            dialog.dismiss()
-//        }
-//        binding.buttonCancelDeleting.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//    }
-
-    private fun onConfirmDeleting() {
-        if (words.size > 1 && lessonProgress == 1) {
-            deleteWord((words[wordIndex]))
-        } else if (words.size > 1 && lessonProgress == words.size) {
-            deleteWord(words[wordIndex])
-            lessonProgress--
-            wordIndex--
-        } else if (words.size > 1 && lessonProgress > 1) {
-            deleteWord(words[wordIndex])
-            lessonProgress--
-        } else if (words.size == 1) {
-            deleteWord(words[wordIndex])
-            wordIndex = 0
-            lessonProgress = 0
-        }
-        showWordIndexProgress()
     }
 
     private fun updateWordList() {
@@ -312,8 +281,8 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    private fun showEditionWordDialog(context: Context) {
-        val dialog = AdditionWordFragment()
-        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
-    }
+//    private fun showEditionWordDialog(context: Context) {
+//        val dialog = AdditionWordFragment()
+//        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
+//    }
 }
