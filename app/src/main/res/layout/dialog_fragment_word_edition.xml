@@ -3,36 +3,67 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_background"
+    android:padding="20dp">
 
-    <EditText
-        android:id="@+id/editTextEditionWord"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_text_change_word_wrapper"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:hint="Change the word"
+        app:endIconTint="#BDBDBD"
+        app:hintTextColor="@color/hint"
+        app:boxStrokeColor="@color/text_input_layout_edition_word"
+        app:endIconMode="clear_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/editTextEditionWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="300dp"
+            android:ems="10"
+            android:background="@null"
+            android:textCursorDrawable="@null"
+            android:inputType="textPersonName"
+            android:textColor="#ffffff"
+            android:textColorHint="@color/hint"
+            android:textStyle="italic"  />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/buttonConfirmChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/dialog_button_background"
+        android:minHeight="30dp"
         android:text="Confirm"
+        android:textColor="#ffffff"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancelChanges"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEditionWord" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_change_word_wrapper" />
 
     <Button
         android:id="@+id/buttonCancelChanges"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/dialog_button_background_red_stroke"
+        android:minHeight="30dp"
         android:text="Cancel"
+        android:textColor="@color/red_stroke_button"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/buttonConfirmChanges"
-        app:layout_constraintTop_toBottomOf="@+id/editTextEditionWord" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_change_word_wrapper" />
 </androidx.constraintlayout.widget.ConstraintLayout>

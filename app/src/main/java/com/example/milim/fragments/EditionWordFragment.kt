@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -57,7 +58,11 @@ class EditionWordFragment : DialogFragment() {
         var wordObject: Word? = null
         arguments?.let {
             wordObject = it.getParcelable(TAG_WORD_OBJECT)
-            binding.editTextEditionWord.setText(wordObject?.word)
+            wordObject?.let { obj ->
+                dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+                binding.editTextEditionWord.setText(obj.word)
+                binding.editTextEditionWord.requestFocus()
+            }
         }
 
         binding.buttonConfirmChanges.setOnClickListener {
