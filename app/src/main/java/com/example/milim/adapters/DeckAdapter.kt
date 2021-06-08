@@ -35,22 +35,23 @@ class DeckAdapter(var decks: List<Deck>, val context: Context) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeckViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_deck, parent, false)
-        return DeckViewHolder(view)
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemDeckBinding.inflate(inflater, parent, false)
+        return DeckViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DeckViewHolder, position: Int) {
         val deck = decks[position]
-        with(holder) {
-            textViewName.text = deck.name
-            setTextViewNameGravity(deck, textViewName)
-            textViewProgress.text = deck.progress.toString()
+        holder.binding.apply {
+            textViewItemDeckName.text = deck.name
+            setTextViewNameGravity(deck, textViewItemDeckName)
+            textViewItemProgress.text = deck.progress.toString()
             textViewSize.text = deck.size.toString()
-            constraintLayout.setOnLongClickListener {
+            itemDeck.setOnLongClickListener {
                 onDeckLongClickListener?.onLongClick(deck)
                 true
             }
-            constraintLayout.setOnClickListener {
+            itemDeck.setOnClickListener {
                 onDeckClickListener?.onClick(deck)
             }
         }
@@ -80,12 +81,7 @@ class DeckAdapter(var decks: List<Deck>, val context: Context) :
         }
     }
 
-    inner class DeckViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val binding = ItemDeckBinding.bind(itemView)
-        val textViewName = binding.textViewItemDeckName
-        val textViewProgress = binding.textViewItemProgress
-        val textViewSize = binding.textViewSize
-        val constraintLayout = binding.itemDeck
+    inner class DeckViewHolder(val binding: ItemDeckBinding) : RecyclerView.ViewHolder(binding.root) {
     }
 
     fun interface OnDeckLongClickListener {
