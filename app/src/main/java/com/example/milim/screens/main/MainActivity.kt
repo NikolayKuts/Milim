@@ -15,16 +15,15 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.milim.R
 import com.example.milim.adapters.DeckAdapter
-import com.example.milim.databinding.ActivityMainBinding
-import com.example.milim.databinding.DialogDeckBinding
-import com.example.milim.databinding.DialogDeckCreationBinding
-import com.example.milim.databinding.DialogDeckDeletingBinding
+import com.example.milim.databinding.*
+import com.example.milim.fragments.DeckRenamingFragment
+import com.example.milim.interfaces.OnActionPerformedUpdater
 import com.example.milim.pojo.Deck
 import com.example.milim.pojo.Word
 import com.example.milim.screens.lesson.LessonActivity
 import com.example.milim.screens.word_browser.WordBrowserActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenamingFragment.ListenerCallback {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var decks: MutableList<Deck>
@@ -32,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val FILE_NAME = "object_test.obj"
+        const val TAG_DECK_RENAMING_DIALOG = "deck_renaming_dialog"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +80,17 @@ class MainActivity : AppCompatActivity() {
 //        adapter.notifyDataSetChanged()
 
 
+    }
+
+    override fun onActionPerformedRefresh() {
+        onResume()
+    }
+
+    override fun onConformDeckRenaming(oldDeck: Deck, newDeck: Deck) {
+        MainPresenter(applicationContext).apply {
+            deleteDeck(oldDeck)
+            addDeck(newDeck)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
@@ -147,6 +158,7 @@ class MainActivity : AppCompatActivity() {
         val textViewDeckDialogTitle = dialog.findViewById<TextView>(R.id.textViewDeckDialogTitle)
         val buttonDeleteDeck = dialog.findViewById<Button>(R.id.buttonDeleteDeck)
         val buttonShowWordList = dialog.findViewById<Button>(R.id.button_show_word_list)
+        val buttonRenameDeck = dialog.findViewById<Button>(R.id.button_rename_deck)
 
         textViewDeckDialogTitle.text = deck.name
         buttonDeleteDeck.setOnClickListener {
@@ -155,6 +167,11 @@ class MainActivity : AppCompatActivity() {
         }
         buttonShowWordList.setOnClickListener {
             startActivity(WordBrowserActivity.newIntent(applicationContext, deck.id))
+        }
+        buttonRenameDeck.setOnClickListener {
+            val wordRenamingDialog = DeckRenamingFragment.newInstance(deck)
+            wordRenamingDialog.show(supportFragmentManager, TAG_DECK_RENAMING_DIALOG)
+            dialog.dismiss()
         }
 
         dialog.show()

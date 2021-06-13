@@ -9,9 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Milim">
-        <activity android:name=".screens.edition_word.EditWordActivity"></activity>
         <activity android:name=".screens.word_browser.WordBrowserActivity" />
-        <activity android:name=".screens.adding_word.AddWordActivity" />
         <activity android:name=".screens.lesson.LessonActivity" />
         <activity android:name=".screens.main.MainActivity">
             <intent-filter>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dialog_background"
+    android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_text_deck_renaming_wrapper"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Rename the deck"
+        app:endIconMode="clear_text"
+        app:endIconTint="#BDBDBD"
+        app:hintTextColor="@color/hint"
+        app:boxStrokeColor="@color/text_input_layout_edition_word"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/edit_text_deck_renaming"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:minWidth="300dp"
+            android:background="@null"
+            android:textCursorDrawable="@null"
+            android:textColor="#ffffff"
+            android:textColorHint="@color/hint"
+            android:inputType="textPersonName"
+            android:textStyle="italic"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button_conform_deck_renaming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Rename"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background"
+        android:minHeight="30dp"
+        android:textColor="#ffffff"
+        app:layout_constraintEnd_toStartOf="@+id/button_cancel_deck_renaming"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_deck_renaming_wrapper" />
+
+    <Button
+        android:id="@+id/button_cancel_deck_renaming"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="20dp"
+        app:backgroundTint="@null"
+        android:background="@drawable/dialog_button_background_red_stroke"
+        android:textColor="@color/red_stroke_button"
+        android:minHeight="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/button_conform_deck_renaming"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_deck_renaming_wrapper" />
+</androidx.constraintlayout.widget.ConstraintLayout>
