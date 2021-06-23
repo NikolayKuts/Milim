@@ -1,4 +1,4 @@
-package com.example.milim.fragments
+package com.example.milim.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentWordAdditionBinding
 import com.example.milim.interfaces.OnActionPerformedUpdater
-import com.example.milim.screens.main.MainPresenter
+import com.example.milim.presentation.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordAdditionBinding? = null

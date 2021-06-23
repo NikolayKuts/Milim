@@ -1,4 +1,4 @@
-package com.example.milim.fragments
+package com.example.milim.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentDeckRenamingBinding
 import com.example.milim.interfaces.OnActionPerformedUpdater
-import com.example.milim.pojo.Deck
+import com.example.milim.domain.pojo.Deck
 
 class DeckRenamingFragment : DialogFragment() {
     private var _binding: DialogFragmentDeckRenamingBinding? = null

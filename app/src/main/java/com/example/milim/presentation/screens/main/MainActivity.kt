@@ -1,27 +1,23 @@
-package com.example.milim.screens.main
+package com.example.milim.presentation.screens.main
 
 import android.app.Dialog
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.milim.R
-import com.example.milim.adapters.DeckAdapter
+import com.example.milim.presentation.adapters.DeckAdapter
 import com.example.milim.databinding.*
-import com.example.milim.fragments.DeckRenamingFragment
+import com.example.milim.presentation.fragments.DeckRenamingFragment
 import com.example.milim.interfaces.OnActionPerformedUpdater
-import com.example.milim.pojo.Deck
-import com.example.milim.pojo.Word
-import com.example.milim.screens.lesson.LessonActivity
-import com.example.milim.screens.word_browser.WordBrowserActivity
+import com.example.milim.domain.pojo.Deck
+import com.example.milim.presentation.screens.lesson.LessonActivity
+import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
 
 class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenamingFragment.ListenerCallback {
 

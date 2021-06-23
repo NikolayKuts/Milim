@@ -1,4 +1,4 @@
-package com.example.milim.screens.word_browser
+package com.example.milim.presentation.screens.word_browser
 
 import android.content.Context
 import android.content.Intent
@@ -6,10 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.milim.R
-import com.example.milim.adapters.WordBrowserAdapter
+import com.example.milim.presentation.adapters.WordBrowserAdapter
 import com.example.milim.databinding.ActivityWordBrowserBinding
-import com.example.milim.screens.main.MainPresenter
+import com.example.milim.presentation.screens.main.MainPresenter
 
 class WordBrowserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

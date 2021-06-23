@@ -1,4 +1,4 @@
-package com.example.milim.data
+package com.example.milim.domain
 
 class Asynchronium<G, R> {
     private var response: R? = null

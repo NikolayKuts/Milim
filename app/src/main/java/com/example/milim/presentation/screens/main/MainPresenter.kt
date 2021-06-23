@@ -1,10 +1,10 @@
-package com.example.milim.screens.main
+package com.example.milim.presentation.screens.main
 
 import android.content.Context
-import com.example.milim.data.Asynchronium
+import com.example.milim.domain.Asynchronium
 import com.example.milim.data.MilimDatabase
-import com.example.milim.pojo.Deck
-import com.example.milim.pojo.Word
+import com.example.milim.domain.pojo.Deck
+import com.example.milim.domain.pojo.Word
 
 class MainPresenter(private val context: Context) {
     private val database = MilimDatabase.getInstance(context)

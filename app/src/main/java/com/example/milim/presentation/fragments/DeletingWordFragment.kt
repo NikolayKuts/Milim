@@ -1,4 +1,4 @@
-package com.example.milim.fragments
+package com.example.milim.presentation.fragments
 
 import android.content.Context
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.milim.pojo
+package com.example.milim.domain.pojo
 
 import android.os.Parcel
 import android.os.Parcelable

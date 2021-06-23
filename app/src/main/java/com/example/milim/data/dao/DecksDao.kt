@@ -1,10 +1,10 @@
-package com.example.milim.data
+package com.example.milim.data.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.milim.pojo.Deck
+import com.example.milim.domain.pojo.Deck
 
 @Dao
 interface DecksDao {

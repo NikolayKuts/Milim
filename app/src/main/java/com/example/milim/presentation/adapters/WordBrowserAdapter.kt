@@ -1,4 +1,4 @@
-package com.example.milim.adapters
+package com.example.milim.presentation.adapters
 
 import android.content.Context
 import android.view.Gravity
@@ -9,7 +9,7 @@ import androidx.core.os.ConfigurationCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.milim.R
 import com.example.milim.databinding.ItemWordBrowserBinding
-import com.example.milim.pojo.Word
+import com.example.milim.domain.pojo.Word
 import java.util.regex.Pattern
 
 class WordBrowserAdapter(val context: Context) : RecyclerView.Adapter<WordBrowserAdapter.ViewHolder>() {
@@ -40,7 +40,7 @@ class WordBrowserAdapter(val context: Context) : RecyclerView.Adapter<WordBrowse
             textViewNumberWord.text = (position + 1).toString()
             textViewWord.text = words[position].word
 
-            val pattern = Pattern.compile("[!${HEBREW_LETTERS}]")
+            val pattern = Pattern.compile("[!$HEBREW_LETTERS]")
             val match = pattern.matcher(wordObject.word).find()
 
             textViewWord.gravity = when (currentLanguage) {

@@ -1,24 +1,15 @@
-package com.example.milim.adapters
+package com.example.milim.presentation.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.HeaderViewListAdapter
 import android.widget.TextView
 import androidx.core.os.ConfigurationCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import com.example.milim.R
-import com.example.milim.databinding.ActivityMainBinding
 import com.example.milim.databinding.ItemDeckBinding
-import com.example.milim.pojo.Deck
-import java.util.*
-import java.util.regex.Matcher
+import com.example.milim.domain.pojo.Deck
 import java.util.regex.Pattern
-import java.util.zip.Inflater
 
 class DeckAdapter(var decks: List<Deck>, val context: Context) :
     RecyclerView.Adapter<DeckAdapter.DeckViewHolder>() {

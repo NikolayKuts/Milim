@@ -1,4 +1,4 @@
-package com.example.milim.pojo
+package com.example.milim.domain.pojo
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

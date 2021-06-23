@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.milim.pojo.Deck
-import com.example.milim.pojo.Word
+import com.example.milim.data.dao.DecksDao
+import com.example.milim.data.dao.WordsDao
+import com.example.milim.domain.pojo.Deck
+import com.example.milim.domain.pojo.Word
 
 @Database(entities = [Deck::class, Word::class], version = 2, exportSchema = false)
 abstract class MilimDatabase : RoomDatabase() {

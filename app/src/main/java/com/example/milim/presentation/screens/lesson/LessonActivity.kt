@@ -1,4 +1,4 @@
-package com.example.milim.screens.lesson
+package com.example.milim.presentation.screens.lesson
 
 import android.app.Dialog
 import android.content.Context
@@ -14,14 +14,14 @@ import androidx.core.view.isVisible
 import com.example.milim.R
 import com.example.milim.databinding.ActivityLessonBinding
 import com.example.milim.databinding.DialogLessonCounterBinding
-import com.example.milim.fragments.AdditionWordFragment
-import com.example.milim.fragments.DeletingWordFragment
-import com.example.milim.fragments.EditionWordFragment
+import com.example.milim.presentation.fragments.AdditionWordFragment
+import com.example.milim.presentation.fragments.DeletingWordFragment
+import com.example.milim.presentation.fragments.EditionWordFragment
 import com.example.milim.interfaces.OnActionPerformedUpdater
-import com.example.milim.pojo.Deck
-import com.example.milim.pojo.Word
+import com.example.milim.domain.pojo.Deck
+import com.example.milim.domain.pojo.Word
 //import com.example.milim.screens.adding_word.AddWordActivity
-import com.example.milim.screens.main.MainPresenter
+import com.example.milim.presentation.screens.main.MainPresenter
 
 class LessonActivity : AppCompatActivity(),
     DeletingWordFragment.ListenerCallback,
