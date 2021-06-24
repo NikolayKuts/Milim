@@ -26,6 +26,7 @@ import com.example.milim.presentation.screens.main.MainPresenter
 class LessonActivity : AppCompatActivity(),
     DeletingWordFragment.ListenerCallback,
     EditionWordFragment.ListenerCallback,
+    AdditionWordFragment.ListenerCallback,
     OnActionPerformedUpdater {
 
     private lateinit var binding: ActivityLessonBinding
@@ -57,11 +58,11 @@ class LessonActivity : AppCompatActivity(),
         val view = binding.root
         setContentView(view)
 
-        val presenter = MainPresenter(applicationContext)
+        //val presenter = MainPresenter(applicationContext)
         val intent = intent
         deckId = intent.getIntExtra(TAG_DECK_ID, -1)
-        words = presenter.getWords(deckId).toMutableList()
-        deck = presenter.getDeckById(deckId)
+//        words = presenter.getWords(deckId).toMutableList()
+//        deck = presenter.getDeckById(deckId)
         deckName = deck.name
         setLessonProgressOnStartLesson()
         setWordIndexOnStartLesson()
@@ -86,9 +87,9 @@ class LessonActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        val presenter = MainPresenter(applicationContext)
+        //val presenter = MainPresenter(applicationContext)
         updateWordList()
-        deck = presenter.getDeckById(deckId)
+//        deck = presenter.getDeckById(deckId)
 //        setLessonProgressOnStartLesson()
         setViewContent()
         if (words.isNotEmpty()) {
@@ -103,6 +104,10 @@ class LessonActivity : AppCompatActivity(),
 
     override fun onActionPerformedRefresh() {
         onResume()
+    }
+
+    override fun onConformWordAddition(newWord: String, deckId: Int) {
+        TODO("Not yet implemented")
     }
 
     override fun onConfirmWordDeleting() {
@@ -124,7 +129,7 @@ class LessonActivity : AppCompatActivity(),
     }
 
     override fun onConfirmChanges(wordObject: Word) {
-        MainPresenter(applicationContext).updateWord(wordObject)
+        //MainPresenter(applicationContext).updateWord(wordObject)
     }
 
     fun onNextClick(view: View) {
@@ -218,17 +223,17 @@ class LessonActivity : AppCompatActivity(),
 
     private fun updateWordList() {
         words.clear()
-        words.addAll(MainPresenter(applicationContext).getWords(deckId))
+        //words.addAll(MainPresenter(applicationContext).getWords(deckId))
     }
 
     private fun deleteWord(word: Word) {
-        val presenter = MainPresenter(applicationContext)
-        presenter.deleteWord(word)
+//        val presenter = MainPresenter(applicationContext)
+//        presenter.deleteWord(word)
     }
 
     private fun saveProgress() {
-        val presenter = MainPresenter(applicationContext)
-        presenter.updateDeck(Deck(deckId, deckName, words.size, lessonProgress))
+//        val presenter = MainPresenter(applicationContext)
+//        presenter.updateDeck(Deck(deckId, deckName, words.size, lessonProgress))
     }
 
     private fun updateLessonProgress() {

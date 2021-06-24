@@ -10,20 +10,27 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.milim.R
 import com.example.milim.presentation.adapters.DeckAdapter
 import com.example.milim.databinding.*
 import com.example.milim.presentation.fragments.DeckRenamingFragment
 import com.example.milim.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
+import com.example.milim.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
 
-class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenamingFragment.ListenerCallback {
+class MainActivity : AppCompatActivity(),
+    OnActionPerformedUpdater,
+    DeckRenamingFragment.ListenerCallback,
+    MainView {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var decks: MutableList<Deck>
     private lateinit var adapter: DeckAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var presenter: MainPresenter
 
     companion object {
         const val FILE_NAME = "object_test.obj"
@@ -36,11 +43,13 @@ class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenaming
         val view = binding.root
         setContentView(view)
 
-        val presenter = MainPresenter(this.applicationContext)
-        decks = presenter.getAllDecks().toMutableList()
+        recyclerView = binding.recyclerViewDecks
+        recyclerView.layoutManager = LinearLayoutManager(applicationContext)
 
-        val recyclerView = binding.recyclerViewDecks
-        recyclerView.layoutManager = LinearLayoutManager(this.applicationContext)
+        presenter = MainPresenter(this, applicationContext)
+
+        decks = mutableListOf()
+
         adapter = DeckAdapter(decks, applicationContext)
         recyclerView.adapter = adapter
 
@@ -78,27 +87,33 @@ class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenaming
 
     }
 
+    override fun showData(decksFromDB: List<Deck>) {
+        decks.clear()
+        decks.addAll(decksFromDB)
+        adapter.notifyDataSetChanged()
+    }
+
     override fun onActionPerformedRefresh() {
         onResume()
     }
 
     override fun onConformDeckRenaming(oldDeck: Deck, newDeck: Deck) {
-        MainPresenter(applicationContext).apply {
-            deleteDeck(oldDeck)
-            addDeck(newDeck)
-        }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
+        presenter.renameDeck(oldDeck, newDeck)
     }
 
     override fun onResume() {
         super.onResume()
-        val presenter = MainPresenter(this.applicationContext)
-        decks.clear()
-        decks.addAll(presenter.getAllDecks())
-        adapter.notifyDataSetChanged()
+        presenter.loadData()
+    }
+
+    override fun showToastIfDeckExist() {
+        Toast.makeText(applicationContext, "the deck is already exist", Toast.LENGTH_LONG)
+            .show()
+    }
+
+    override fun showToastOnDeckCreated() {
+        Toast.makeText(applicationContext, "the deck has been created", Toast.LENGTH_LONG)
+            .show()
     }
 
     fun onMainActivityButtonClick(view: View) {
@@ -113,44 +128,23 @@ class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenaming
         dialog.setContentView(dialogView)
         binding.editTextDeckName.setText("")
         dialog.show()
+        presenter.dialogHelper = MainPresenter.DialogHelper { dialog.dismiss() }
         binding.buttonCancelDeckCreation.setOnClickListener { dialog.dismiss() }
         binding.buttonCreateDeck.setOnClickListener {
             val deckName = binding.editTextDeckName.text.toString().trim()
-            if (deckName != "" && isDeckNotExist(deckName)) {
-                onCreationConfirming(deckName)
-                dialog.dismiss()
-                onResume()
-                Toast.makeText(applicationContext, "the deck has been created", Toast.LENGTH_LONG)
-                    .show()
+            if (deckName.isNotEmpty()) {
+                presenter.addDeck(deckName)
             } else {
-                when (deckName) {
-                    "" -> Toast.makeText(applicationContext, "Type deck name", Toast.LENGTH_LONG)
-                        .show()
-                    else -> Toast.makeText(applicationContext, "the deck is already exist", Toast.LENGTH_LONG)
-                        .show()
-                }
-
+                Toast.makeText(applicationContext, "Type deck name", Toast.LENGTH_LONG)
+                    .show()
             }
         }
-    }
-
-    private fun onCreationConfirming(deckName: String) {
-        val presenter = MainPresenter(applicationContext)
-        val newDeckId = presenter.getMaxDeckId() + 1
-        val newDeck = Deck(newDeckId, deckName)
-        presenter.addDeck(newDeck)
-    }
-
-    private fun isDeckNotExist(name: String): Boolean {
-        val presenter = MainPresenter(applicationContext)
-        return !presenter.isDeckExist(name)
     }
 
     private fun showDeckDialog(context: Context, deck: Deck) {
         val dialog = Dialog(context)
         dialog.setContentView(R.layout.dialog_deck)
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
-
         val textViewDeckDialogTitle = dialog.findViewById<TextView>(R.id.textViewDeckDialogTitle)
         val buttonDeleteDeck = dialog.findViewById<Button>(R.id.buttonDeleteDeck)
         val buttonShowWordList = dialog.findViewById<Button>(R.id.button_show_word_list)
@@ -180,13 +174,12 @@ class MainActivity : AppCompatActivity(), OnActionPerformedUpdater, DeckRenaming
         val view = binding.root
         dialog.setContentView(view)
         dialog.show()
-        binding.textViewDeckDeletingTitle.text = "Would you like to delete the deck \"${deck.name}\"?"
+        binding.textViewDeckDeletingTitle.text =
+            "Would you like to delete the deck \"${deck.name}\"?"
         binding.buttonCancelDeleting.setOnClickListener { dialog.dismiss() }
         binding.buttonDeleteDeck.setOnClickListener {
-            val presenter = MainPresenter(context)
             presenter.deleteDeck(deck)
             dialog.dismiss()
-            onResume()
             Toast.makeText(context, "The deck has been deleted", Toast.LENGTH_SHORT)
                 .show()
         }

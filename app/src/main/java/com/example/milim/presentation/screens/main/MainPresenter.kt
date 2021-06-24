@@ -5,21 +5,45 @@ import com.example.milim.domain.Asynchronium
 import com.example.milim.data.MilimDatabase
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
+import com.example.milim.interfaces.MainView
 
-class MainPresenter(private val context: Context) {
+class MainPresenter(private val view: MainView, private val context: Context) {
     private val database = MilimDatabase.getInstance(context)
+    var dialogHelper: DialogHelper? = null
+
+    fun interface DialogHelper {
+        fun dismissDialog()
+    }
 
     fun getDeckById(deckId: Int): Deck {
         val asynchronium = Asynchronium<Int, Deck>()
-        asynchronium.execute(deckId) { database.decksDao().getDeckById(it)}
+        asynchronium.execute(deckId) { database.decksDao().getDeckById(it) }
         val response = asynchronium.getResponse()
         response?.let { return it }
         return Deck(-1, "", 0, 0)
     }
 
-    fun  addDeck(deck: Deck) {
+    private fun addDeck(deck: Deck) {
         val asynchronium = Asynchronium<Deck, Unit>()
         asynchronium.execute(deck) { database.decksDao().addDeck(deck) }
+    }
+
+    fun addDeck(deckName: String) {
+        if (isDeckExist(deckName)) {
+            view.showToastIfDeckExist()
+        } else {
+            addNewDeck(deckName)
+            view.showToastOnDeckCreated()
+            view.showData(getAllDecks())
+            dialogHelper?.dismissDialog()
+        }
+    }
+
+    fun addNewDeck(deckName: String) {
+        val newDeckId = getMaxDeckId() + 1
+        val newDeck = Deck(newDeckId, deckName)
+        addDeck(newDeck)
+        view.showData(getAllDecks())
     }
 
     fun updateDeck(deck: Deck) {
@@ -34,7 +58,7 @@ class MainPresenter(private val context: Context) {
         return listOf()
     }
 
-    fun getMaxDeckId(): Int {
+    private fun getMaxDeckId(): Int {
         val asynchronium = Asynchronium<Unit, Int>()
         asynchronium.execute(Unit) { database.decksDao().getMaxDeckId() }
         val response = asynchronium.getResponse()
@@ -42,12 +66,12 @@ class MainPresenter(private val context: Context) {
         return -1
     }
 
-    fun isDeckExist(name: String): Boolean {
+    private fun isDeckExist(name: String): Boolean {
         val asynchronium = Asynchronium<String, Boolean>()
         asynchronium.execute(name) { database.decksDao().isDeckExist(it) }
         val response = asynchronium.getResponse()
-        return response?: true
-        
+        return response ?: true
+
     }
 
     private fun updateDecks() {
@@ -70,6 +94,7 @@ class MainPresenter(private val context: Context) {
     fun deleteDeck(deck: Deck) {
         val asynchronium = Asynchronium<Deck, Unit>()
         asynchronium.execute(deck) { database.decksDao().deleteDeck(deck.id) }
+        view.showData(getAllDecks())
     }
 
     fun getWords(deckId: Int): List<Word> {
@@ -119,5 +144,15 @@ class MainPresenter(private val context: Context) {
         val asynchronium = Asynchronium<Int, Unit>()
         asynchronium.execute(wordId) { database.wordsDao().deleteWordById(it) }
         updateDecks()
+    }
+
+    fun loadData() {
+        view.showData(getAllDecks())
+    }
+
+    fun renameDeck(oldDeck: Deck, newDeck: Deck) {
+        deleteDeck(oldDeck)
+        addDeck(newDeck)
+        view.showData(getAllDecks())
     }
 }

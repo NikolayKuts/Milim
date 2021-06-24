@@ -17,6 +17,7 @@ class AdditionWordFragment : DialogFragment() {
     private val binding
     get() = _binding!!
     private lateinit var dataUpdater: OnActionPerformedUpdater
+    private var listener: ListenerCallback? = null
     private var deckId = -1;
 
     companion object {
@@ -30,9 +31,14 @@ class AdditionWordFragment : DialogFragment() {
         }
     }
 
+    interface ListenerCallback {
+        fun onConformWordAddition(newWord: String, deckId: Int)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         dataUpdater = context as OnActionPerformedUpdater
+        listener = context as ListenerCallback
     }
 
     override fun onCreateView(
@@ -59,7 +65,9 @@ class AdditionWordFragment : DialogFragment() {
         binding.buttonAddWord.setOnClickListener {
             val newWord = binding.editTextNewWord.text.toString()
             if (newWord != "") {
-                insetWord(it.context, newWord, deckId)
+
+                //insetWord(it.context, newWord, deckId)
+                    listener?.onConformWordAddition(newWord, deckId)
                 binding.editTextNewWord.setText("")
                 Toast.makeText(it.context, "The word has been added", Toast.LENGTH_SHORT).show()
                 dataUpdater.onActionPerformedRefresh()
@@ -75,8 +83,8 @@ class AdditionWordFragment : DialogFragment() {
         super.onDestroyView()
     }
 
-    private fun insetWord(context: Context, newWord: String, deckId: Int) {
-        val presenter = MainPresenter(context)
-        presenter.addWord(newWord, deckId)
-    }
+//    private fun insetWord(context: Context, newWord: String, deckId: Int) {
+//        val presenter = MainPresenter(context)
+//        presenter.addWord(newWord, deckId)
+//    }
 }

@@ -17,15 +17,15 @@ class WordBrowserActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        val presenter = MainPresenter(applicationContext)
-        val wordsFromDB = presenter.getWords(intent.getIntExtra(TAG_DECK_ID, -1))
-        for (word in wordsFromDB) {
-            Log.i("word_browser", "onCreate: $word") }
+        //val presenter = MainPresenter(applicationContext)
+        //val wordsFromDB = presenter.getWords(intent.getIntExtra(TAG_DECK_ID, -1))
+//        for (word in wordsFromDB) {
+//            Log.i("word_browser", "onCreate: $word") }
 
         binding.recyclerViewWordBrowser.layoutManager = LinearLayoutManager(applicationContext)
         val adapter = WordBrowserAdapter(applicationContext)
         binding.recyclerViewWordBrowser.adapter = adapter
-        adapter.words = wordsFromDB
+//        adapter.words = wordsFromDB
     }
 
     companion object {

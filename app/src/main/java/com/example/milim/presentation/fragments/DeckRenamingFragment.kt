@@ -92,7 +92,7 @@ class DeckRenamingFragment : DialogFragment() {
                                 OldDeck.progress
                             )
                         )
-                        dataUpdater?.onActionPerformedRefresh()
+                        //dataUpdater?.onActionPerformedRefresh()
                         dismiss()
                     }
                 }

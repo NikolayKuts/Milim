@@ -72,7 +72,8 @@ class DeckAdapter(var decks: List<Deck>, val context: Context) :
         }
     }
 
-    inner class DeckViewHolder(val binding: ItemDeckBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class DeckViewHolder(val binding: ItemDeckBinding) :
+        RecyclerView.ViewHolder(binding.root) {
     }
 
     fun interface OnDeckLongClickListener {
