@@ -15,13 +15,7 @@ class MainPresenter(private val view: MainView, private val context: Context) {
         fun dismissDialog()
     }
 
-    fun getDeckById(deckId: Int): Deck {
-        val asynchronium = Asynchronium<Int, Deck>()
-        asynchronium.execute(deckId) { database.decksDao().getDeckById(it) }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return Deck(-1, "", 0, 0)
-    }
+
 
     private fun addDeck(deck: Deck) {
         val asynchronium = Asynchronium<Deck, Unit>()
@@ -74,6 +68,7 @@ class MainPresenter(private val view: MainView, private val context: Context) {
 
     }
 
+    // is repeated
     private fun updateDecks() {
         val asynchronium = Asynchronium<Unit, Unit>()
         asynchronium.execute(Unit) {
@@ -97,13 +92,6 @@ class MainPresenter(private val view: MainView, private val context: Context) {
         view.showData(getAllDecks())
     }
 
-    fun getWords(deckId: Int): List<Word> {
-        val asynchronium = Asynchronium<Int, List<Word>>()
-        asynchronium.execute(deckId) { database.wordsDao().getWordsByIdDeck(it) }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return listOf()
-    }
 
     fun getWordById(wordId: Int): Word {
         val asynchronium = Asynchronium<Int, Word>()
@@ -113,22 +101,17 @@ class MainPresenter(private val view: MainView, private val context: Context) {
         return Word(-1, -1, "empty word")
     }
 
-    fun addWord(contentWord: String, deckId: Int) {
-        val asynchronium = Asynchronium<Unit, Int>()
-        asynchronium.execute(Unit) { database.wordsDao().getMaxWordId() }
-        val maxWordId = asynchronium.getResponse()
-        maxWordId?.let {
-            val newWordObject = Word((maxWordId + 1), deckId, contentWord)
-            Asynchronium<Word, Unit>().execute(newWordObject) { database.wordsDao().insertWord(it) }
-        }
-        updateDecks()
-    }
+//    fun addWord(contentWord: String, deckId: Int) {
+//        val asynchronium = Asynchronium<Unit, Int>()
+//        asynchronium.execute(Unit) { database.wordsDao().getMaxWordId() }
+//        val maxWordId = asynchronium.getResponse()
+//        maxWordId?.let {
+//            val newWordObject = Word((maxWordId + 1), deckId, contentWord)
+//            Asynchronium<Word, Unit>().execute(newWordObject) { database.wordsDao().insertWord(it) }
+//        }
+//        updateDecks()
+//    }
 
-    fun updateWord(wordObject: Word) {
-        val asynchronium = Asynchronium<Word, Unit>()
-        asynchronium.execute(wordObject) { database.wordsDao().insertWord(it) }
-        updateDecks()
-    }
 
     fun addWordList(words: List<Word>) {
         val asynchronium = Asynchronium<List<Word>, Unit>()
@@ -136,15 +119,7 @@ class MainPresenter(private val view: MainView, private val context: Context) {
         updateDecks()
     }
 
-    fun deleteWord(word: Word) {
-        deleteWord(word.wordId)
-    }
 
-    fun deleteWord(wordId: Int) {
-        val asynchronium = Asynchronium<Int, Unit>()
-        asynchronium.execute(wordId) { database.wordsDao().deleteWordById(it) }
-        updateDecks()
-    }
 
     fun loadData() {
         view.showData(getAllDecks())

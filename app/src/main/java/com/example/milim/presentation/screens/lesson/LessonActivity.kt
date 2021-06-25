@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -20,14 +19,14 @@ import com.example.milim.presentation.fragments.EditionWordFragment
 import com.example.milim.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
-//import com.example.milim.screens.adding_word.AddWordActivity
-import com.example.milim.presentation.screens.main.MainPresenter
+import com.example.milim.interfaces.LessonView
 
 class LessonActivity : AppCompatActivity(),
     DeletingWordFragment.ListenerCallback,
     EditionWordFragment.ListenerCallback,
     AdditionWordFragment.ListenerCallback,
-    OnActionPerformedUpdater {
+    OnActionPerformedUpdater,
+    LessonView {
 
     private lateinit var binding: ActivityLessonBinding
     private lateinit var deck: Deck
@@ -36,6 +35,7 @@ class LessonActivity : AppCompatActivity(),
     private var lessonProgress = 0
     private var wordIndex = 0
     private lateinit var words: MutableList<Word>
+    private lateinit var presenter: LessonPresenter
 
     companion object {
         private const val TAG_WORD_ADDITION_DIALOG = "word_addition_dialog"
@@ -58,16 +58,12 @@ class LessonActivity : AppCompatActivity(),
         val view = binding.root
         setContentView(view)
 
-        //val presenter = MainPresenter(applicationContext)
+        presenter = LessonPresenter(this, applicationContext)
         val intent = intent
         deckId = intent.getIntExtra(TAG_DECK_ID, -1)
-//        words = presenter.getWords(deckId).toMutableList()
-//        deck = presenter.getDeckById(deckId)
-        deckName = deck.name
-        setLessonProgressOnStartLesson()
-        setWordIndexOnStartLesson()
-        setViewContent()
+        words = mutableListOf()
 
+        presenter.loadData(deckId)
 
         binding.textViewDeckName.text = deckName
         binding.textViewQuantity.text = words.size.toString()
@@ -75,61 +71,51 @@ class LessonActivity : AppCompatActivity(),
             showCounterDialog(it.context)
             true
         }
-
-
-
-
-
-        for (word in words) {
-            Log.i("my_test", "onCreate: $word")
-        }
     }
 
-    override fun onResume() {
-        super.onResume()
-        //val presenter = MainPresenter(applicationContext)
-        updateWordList()
-//        deck = presenter.getDeckById(deckId)
-//        setLessonProgressOnStartLesson()
+    override fun setContent(wordsFromDB: List<Word>, deckFromDB: Deck) {
+        words.clear()
+        words.addAll(wordsFromDB)
+        deck = deckFromDB
+        deckName = deck.name
+        setLessonProgressOnStartLesson()
+        setWordIndexOnStartLesson()
         setViewContent()
-        if (words.isNotEmpty()) {
-            binding.textViewWord.setOnLongClickListener {
-                val dialog = EditionWordFragment.newInstance(words[wordIndex])
-                dialog.show(supportFragmentManager, TAG_WORD_EDITION_DIALOG)
-                //startActivity(EditWordActivity.newIntent(it.context, words[wordIndex].wordId))
-                true
-            }
-        }
+        setOnLongClickListenerAccordingToWordsList()
+    }
+
+    override fun updateContent(wordsFromDB: List<Word>, deck: Deck) {
+        words.clear()
+        words.addAll(wordsFromDB)
+        lessonProgress = deck.progress
+        setViewContent()
+        setOnLongClickListenerAccordingToWordsList()
     }
 
     override fun onActionPerformedRefresh() {
-        onResume()
+        presenter.reloadData(deckId)
     }
 
     override fun onConformWordAddition(newWord: String, deckId: Int) {
-        TODO("Not yet implemented")
+        presenter.addWord(newWord, deckId)
     }
 
     override fun onConfirmWordDeleting() {
-        if (words.size > 1 && lessonProgress == 1) {
-            deleteWord((words[wordIndex]))
-        } else if (words.size > 1 && lessonProgress == words.size) {
-            deleteWord(words[wordIndex])
+        deleteWord(words[wordIndex])
+        if (words.size > 1 && lessonProgress == words.size) {
             lessonProgress--
             wordIndex--
         } else if (words.size > 1 && lessonProgress > 1) {
-            deleteWord(words[wordIndex])
             lessonProgress--
         } else if (words.size == 1) {
-            deleteWord(words[wordIndex])
             wordIndex = 0
             lessonProgress = 0
         }
-        showWordIndexProgress()
+        saveProgressOnDeleteWord()
     }
 
     override fun onConfirmChanges(wordObject: Word) {
-        //MainPresenter(applicationContext).updateWord(wordObject)
+        presenter.updateWord(wordObject)
     }
 
     fun onNextClick(view: View) {
@@ -142,7 +128,6 @@ class LessonActivity : AppCompatActivity(),
             setViewContent()
             saveProgress()
         }
-        showWordIndexProgress()
     }
 
     fun onBackClick(view: View) {
@@ -155,25 +140,19 @@ class LessonActivity : AppCompatActivity(),
             setViewContent()
             saveProgress()
         }
-        showWordIndexProgress()
     }
 
     private fun setViewContent() {
         with(binding) {
             if (words.size == 0) {
-                textViewWord.text = "The deck is empty"
+                textViewLessonWord.text = "The deck is empty"
                 textViewProgress.text = (0).toString()
             } else {
-                textViewWord.text = words[wordIndex].word
+                textViewLessonWord.text = words[wordIndex].word
                 textViewProgress.text = (lessonProgress).toString()
             }
             textViewQuantity.text = words.size.toString()
         }
-
-        for (word in words) {
-            Log.i("my_test", "onCreate: $word")
-        }
-        Log.i("my_test", "onCreate: ------------------------------")
     }
 
     fun onMainButtonClick(view: View) {
@@ -208,7 +187,11 @@ class LessonActivity : AppCompatActivity(),
 
     fun onDeleteButtonClick(view: View) {
         if (words.isEmpty()) {
-            Toast.makeText(applicationContext, "there's noting for deleting", Toast.LENGTH_SHORT)
+            Toast.makeText(
+                applicationContext,
+                "there's noting for deleting",
+                Toast.LENGTH_SHORT
+            )
                 .show()
         } else {
             val dialog = DeletingWordFragment.newInstance(words[wordIndex].wordId)
@@ -221,19 +204,16 @@ class LessonActivity : AppCompatActivity(),
         dialog.show(supportFragmentManager, TAG_WORD_ADDITION_DIALOG)
     }
 
-    private fun updateWordList() {
-        words.clear()
-        //words.addAll(MainPresenter(applicationContext).getWords(deckId))
-    }
-
     private fun deleteWord(word: Word) {
-//        val presenter = MainPresenter(applicationContext)
-//        presenter.deleteWord(word)
+        presenter.deleteWord(word)
     }
 
     private fun saveProgress() {
-//        val presenter = MainPresenter(applicationContext)
-//        presenter.updateDeck(Deck(deckId, deckName, words.size, lessonProgress))
+        presenter.updateDeck(Deck(deckId, deckName, words.size, lessonProgress))
+    }
+
+    private fun saveProgressOnDeleteWord() {
+        presenter.updateDeck(Deck(deckId, deckName, words.size - 1, lessonProgress))
     }
 
     private fun updateLessonProgress() {
@@ -251,18 +231,23 @@ class LessonActivity : AppCompatActivity(),
     private fun setLessonProgressOnStartLesson() {
         lessonProgress = when {
             words.isEmpty() -> 0
-//            words.isNotEmpty() && lessonProgress == 0 -> 1
             else -> deck.progress
         }
     }
 
-    private fun showWordIndexProgress() {
-        Log.i(
-            "my_test",
-            "showWordIndexProgress: word index -> $wordIndex progress -> $lessonProgress"
-        )
+    private fun setOnLongClickListenerAccordingToWordsList() {
+        if (words.isNotEmpty()) {
+            binding.textViewLessonWord.setOnLongClickListener {
+                val dialog = EditionWordFragment.newInstance(words[wordIndex])
+                dialog.show(supportFragmentManager, TAG_WORD_EDITION_DIALOG)
+                true
+            }
+        } else {
+            binding.textViewLessonWord.setOnLongClickListener(null)
+        }
     }
 
+    // is repeated
     private fun showCounterDialog(context: Context) {
         val dialog = Dialog(context)
         val binding = DialogLessonCounterBinding.inflate(layoutInflater)
@@ -287,9 +272,4 @@ class LessonActivity : AppCompatActivity(),
             }
         }
     }
-
-//    private fun showEditionWordDialog(context: Context) {
-//        val dialog = AdditionWordFragment()
-//        dialog.show(supportFragmentManager, TAG_ADDITION_WORD_DIALOG)
-//    }
 }
