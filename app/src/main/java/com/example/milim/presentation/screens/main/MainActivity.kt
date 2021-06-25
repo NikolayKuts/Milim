@@ -156,7 +156,15 @@ class MainActivity : AppCompatActivity(),
             dialog.dismiss()
         }
         buttonShowWordList.setOnClickListener {
+            if (deck.size != 0) {
             startActivity(WordBrowserActivity.newIntent(applicationContext, deck.id))
+                dialog.dismiss()
+            } else {
+                Toast.makeText(
+                    applicationContext,
+                    "There are not words in this deck",
+                    Toast.LENGTH_SHORT).show()
+            }
         }
         buttonRenameDeck.setOnClickListener {
             val wordRenamingDialog = DeckRenamingFragment.newInstance(deck)
