@@ -6,73 +6,96 @@ import com.example.milim.data.MilimDatabase
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
 import com.example.milim.interfaces.MainView
+import kotlinx.coroutines.*
 
 class MainPresenter(private val view: MainView, private val context: Context) {
     private val database = MilimDatabase.getInstance(context)
+
+    private val scope = CoroutineScope(Dispatchers.IO)
     var dialogHelper: DialogHelper? = null
 
     fun interface DialogHelper {
         fun dismissDialog()
     }
 
+    fun onAddDeck(deckName: String) {
+        scope.launch {
+            if (isDeckExist(deckName)) {
+                withContext(Dispatchers.Main) {
+                    view.showToastIfDeckExist()
+                }
+            } else {
+                addNewDeck(deckName)
+                withContext(Dispatchers.Main) {
+                    view.showToastOnDeckCreated()
+                    view.showData(getAllDecks())
+                    dialogHelper?.dismissDialog()
+                }
+            }
 
-
-    private fun addDeck(deck: Deck) {
-        val asynchronium = Asynchronium<Deck, Unit>()
-        asynchronium.execute(deck) { database.decksDao().addDeck(deck) }
-    }
-
-    fun addDeck(deckName: String) {
-        if (isDeckExist(deckName)) {
-            view.showToastIfDeckExist()
-        } else {
-            addNewDeck(deckName)
-            view.showToastOnDeckCreated()
-            view.showData(getAllDecks())
-            dialogHelper?.dismissDialog()
         }
     }
 
-    fun addNewDeck(deckName: String) {
-        val newDeckId = getMaxDeckId() + 1
-        val newDeck = Deck(newDeckId, deckName)
-        addDeck(newDeck)
-        view.showData(getAllDecks())
+    private suspend fun insertDeck(deck: Deck) {
+        withContext(Dispatchers.IO) {
+            database.decksDao().addDeck(deck)
+        }
     }
 
-    fun updateDeck(deck: Deck) {
-        addDeck(deck)
+    private suspend fun addNewDeck(deckName: String) {
+        withContext(Dispatchers.IO) {
+            val newDeckId = getMaxDeckId() + 1
+            val newDeck = Deck(newDeckId, deckName)
+            insertDeck(newDeck)
+        }
     }
 
-    fun getAllDecks(): List<Deck> {
-        val asynchronium = Asynchronium<Unit, List<Deck>>()
-        asynchronium.execute(Unit) { database.decksDao().getAllDecks() }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return listOf()
+    fun deleteDeck(deck: Deck) {
+        scope.launch {
+            database.decksDao().deleteDeck(deck.id)
+            withContext(Dispatchers.Main) {
+                view.showData(getAllDecks())
+            }
+        }
     }
 
-    private fun getMaxDeckId(): Int {
-        val asynchronium = Asynchronium<Unit, Int>()
-        asynchronium.execute(Unit) { database.decksDao().getMaxDeckId() }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return -1
+    private suspend fun getAllDecks(): List<Deck> {
+        val result = mutableListOf<Deck>()
+        withContext(Dispatchers.IO) {
+            val decks = async {
+                database.decksDao().getAllDecks()
+            }
+            result.addAll(decks.await())
+        }
+        return result
     }
 
-    private fun isDeckExist(name: String): Boolean {
-        val asynchronium = Asynchronium<String, Boolean>()
-        asynchronium.execute(name) { database.decksDao().isDeckExist(it) }
-        val response = asynchronium.getResponse()
-        return response ?: true
+    private suspend fun getMaxDeckId(): Int {
+        var result = -1
+        withContext(Dispatchers.IO) {
+            val maxDeckId = async {
+                database.decksDao().getMaxDeckId()
+            }
+            result = maxDeckId.await()
+        }
+        return result
+    }
 
+    private suspend fun isDeckExist(name: String): Boolean {
+        var result = true
+        withContext(Dispatchers.IO) {
+            val isExist = async {
+                database.decksDao().isDeckExist(name)
+            }
+            result = isExist.await()
+        }
+        return result
     }
 
     // is repeated
-    private fun updateDecks() {
-        val asynchronium = Asynchronium<Unit, Unit>()
-        asynchronium.execute(Unit) {
-            val decks = database.decksDao().getAllDecks()
+    private suspend fun updateDecks() {
+        withContext(Dispatchers.IO) {
+            val decks = getAllDecks()
             for (deck in decks) {
                 val quantityWords = database.wordsDao().getQuantityWordsInDeck(deck.id)
                 val progress = when {
@@ -86,48 +109,21 @@ class MainPresenter(private val view: MainView, private val context: Context) {
         }
     }
 
-    fun deleteDeck(deck: Deck) {
-        val asynchronium = Asynchronium<Deck, Unit>()
-        asynchronium.execute(deck) { database.decksDao().deleteDeck(deck.id) }
-        view.showData(getAllDecks())
-    }
-
-
-    fun getWordById(wordId: Int): Word {
-        val asynchronium = Asynchronium<Int, Word>()
-        asynchronium.execute(wordId) { database.wordsDao().getWordById(it) }
-        val word = asynchronium.getResponse()
-        word?.let { return word }
-        return Word(-1, -1, "empty word")
-    }
-
-//    fun addWord(contentWord: String, deckId: Int) {
-//        val asynchronium = Asynchronium<Unit, Int>()
-//        asynchronium.execute(Unit) { database.wordsDao().getMaxWordId() }
-//        val maxWordId = asynchronium.getResponse()
-//        maxWordId?.let {
-//            val newWordObject = Word((maxWordId + 1), deckId, contentWord)
-//            Asynchronium<Word, Unit>().execute(newWordObject) { database.wordsDao().insertWord(it) }
-//        }
-//        updateDecks()
-//    }
-
-
-    fun addWordList(words: List<Word>) {
-        val asynchronium = Asynchronium<List<Word>, Unit>()
-        asynchronium.execute(words) { database.wordsDao().insertWordList(it) }
-        updateDecks()
-    }
-
-
-
     fun loadData() {
-        view.showData(getAllDecks())
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                view.showData(getAllDecks())
+            }
+        }
     }
 
     fun renameDeck(oldDeck: Deck, newDeck: Deck) {
         deleteDeck(oldDeck)
-        addDeck(newDeck)
-        view.showData(getAllDecks())
+        scope.launch {
+            insertDeck(newDeck)
+            withContext(Dispatchers.Main) {
+            view.showData(getAllDecks())
+            }
+        }
     }
 }

@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -20,6 +19,8 @@ import com.example.milim.domain.pojo.Deck
 import com.example.milim.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(),
     OnActionPerformedUpdater,
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity(),
         binding.buttonCreateDeck.setOnClickListener {
             val deckName = binding.editTextDeckName.text.toString().trim()
             if (deckName.isNotEmpty()) {
-                presenter.addDeck(deckName)
+                presenter.onAddDeck(deckName)
             } else {
                 Toast.makeText(applicationContext, "Type deck name", Toast.LENGTH_LONG)
                     .show()
@@ -157,13 +158,14 @@ class MainActivity : AppCompatActivity(),
         }
         buttonShowWordList.setOnClickListener {
             if (deck.size != 0) {
-            startActivity(WordBrowserActivity.newIntent(applicationContext, deck.id))
+                startActivity(WordBrowserActivity.newIntent(applicationContext, deck.id))
                 dialog.dismiss()
             } else {
                 Toast.makeText(
                     applicationContext,
                     "There are not words in this deck",
-                    Toast.LENGTH_SHORT).show()
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         buttonRenameDeck.setOnClickListener {
