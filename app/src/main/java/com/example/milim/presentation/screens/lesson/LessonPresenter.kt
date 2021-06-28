@@ -6,69 +6,93 @@ import com.example.milim.domain.Asynchronium
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
 import com.example.milim.interfaces.LessonView
+import kotlinx.coroutines.*
+import kotlin.math.max
 
 class LessonPresenter(private val view: LessonView, context: Context) {
     private val database = MilimDatabase.getInstance(context)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
 
     fun loadData(deckId: Int) {
-        val words = getWords(deckId)
-        val deck = getDeckById(deckId)
-        view.setContent(words, deck)
+        scope.launch(Dispatchers.Main) {
+            val words = getWords(deckId)
+            val deck = getDeckById(deckId)
+            view.setContent(words, deck)
+        }
     }
 
     fun reloadData(deckId: Int) {
-        view.updateContent(getWords(deckId), getDeckById(deckId))
-    }
-
-    private fun getDeckById(deckId: Int): Deck {
-        val asynchronium = Asynchronium<Int, Deck>()
-        asynchronium.execute(deckId) { database.decksDao().getDeckById(it) }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return Deck(-1, "", 0, 0)
-    }
-
-    private fun getWords(deckId: Int): List<Word> {
-        val asynchronium = Asynchronium<Int, List<Word>>()
-        asynchronium.execute(deckId) { database.wordsDao().getWordsByIdDeck(it) }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return listOf()
+        scope.launch(Dispatchers.Main) {
+            view.updateContent(getWords(deckId), getDeckById(deckId))
+        }
     }
 
     fun updateWord(wordObject: Word) {
-        val asynchronium = Asynchronium<Word, Unit>()
-        asynchronium.execute(wordObject) { database.wordsDao().insertWord(it) }
-        updateDecks()
-        view.updateContent(getWords(wordObject.deckId), getDeckById(wordObject.deckId))
+        scope.launch {
+            database.wordsDao().insertWord(wordObject)
+            updateDecks()
+            withContext(Dispatchers.Main) {
+                val deckId = wordObject.deckId
+                view.updateContent(getWords(deckId), getDeckById(deckId))
+            }
+        }
     }
 
     fun deleteWord(word: Word) {
-        deleteWord(word.wordId)
+        scope.launch {
+            database.wordsDao().deleteWordById(word.wordId)
+            updateDecks()
+        }
     }
 
-    private fun deleteWord(wordId: Int) {
-        val asynchronium = Asynchronium<Int, Unit>()
-        asynchronium.execute(wordId) { database.wordsDao().deleteWordById(it) }
-        updateDecks()
+    fun updateDeck(deck: Deck) {
+        scope.launch {
+            addDeck(deck)
+            withContext(Dispatchers.Main) {
+                view.updateContent(getWords(deck.id), deck)
+            }
+        }
     }
 
     fun addWord(word: String, deckId: Int) {
-        val asynchronium = Asynchronium<Unit, Int>()
-        asynchronium.execute(Unit) { database.wordsDao().getMaxWordId() }
-        val maxWordId = asynchronium.getResponse()
-        maxWordId?.let {
-            val wordIdForNewWord = maxWordId + 1
-            val newWordObject = Word(wordIdForNewWord, deckId, word)
-            Asynchronium<Word, Unit>().execute(newWordObject) { database.wordsDao().insertWord(it) }
+        scope.launch {
+            val maxWordId = database.wordsDao().getMaxWordId()
+            val newWordId = maxWordId + 1
+            val newWordObject = Word(newWordId, deckId, word)
+            database.wordsDao().insertWord(newWordObject)
+            updateDecks()
         }
-        updateDecks()
     }
 
-    private fun updateDecks() {
-        val asynchronium = Asynchronium<Unit, Unit>()
-        asynchronium.execute(Unit) {
+    private suspend fun addDeck(deck: Deck) {
+        withContext(Dispatchers.IO) {
+            database.decksDao().addDeck(deck)
+        }
+    }
+
+    private suspend fun getDeckById(deckId: Int): Deck {
+        var result = Deck(-1, "no name")
+        withContext(Dispatchers.IO) {
+            val deck = async { database.decksDao().getDeckById(deckId) }
+            result = deck.await()
+        }
+        return result
+    }
+
+    private suspend fun getWords(deckId: Int): List<Word> {
+        val result = mutableListOf<Word>()
+        withContext(Dispatchers.IO) {
+            val words = async {
+                database.wordsDao().getWordsByIdDeck(deckId)
+            }
+            result.addAll(words.await())
+        }
+        return result
+    }
+
+    private suspend fun updateDecks() {
+        withContext(Dispatchers.IO) {
             val decks = database.decksDao().getAllDecks()
             for (deck in decks) {
                 val quantityWords = database.wordsDao().getQuantityWordsInDeck(deck.id)
@@ -81,14 +105,5 @@ class LessonPresenter(private val view: LessonView, context: Context) {
                 database.decksDao().addDeck(updatedDeck)
             }
         }
-    }
-    fun updateDeck(deck: Deck) {
-        addDeck(deck)
-        view.updateContent(getWords(deck.id), deck)
-    }
-
-    private fun addDeck(deck: Deck) {
-        val asynchronium = Asynchronium<Deck, Unit>()
-        asynchronium.execute(deck) { database.decksDao().addDeck(deck) }
     }
 }
