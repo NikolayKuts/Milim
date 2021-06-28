@@ -5,20 +5,26 @@ import com.example.milim.data.MilimDatabase
 import com.example.milim.domain.Asynchronium
 import com.example.milim.domain.pojo.Word
 import com.example.milim.interfaces.WordBrowserView
+import kotlinx.coroutines.*
 
 class WordBrowserPresenter(private val view: WordBrowserView, private val context: Context) {
     private val database = MilimDatabase.getInstance(context)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     fun loadData(deckId: Int) {
-        view.showData(getWords(deckId))
+        scope.launch(Dispatchers.Main) {
+            view.showData(getWords(deckId))
+        }
     }
 
-    private fun getWords(deckId: Int): List<Word> {
-        val asynchronium = Asynchronium<Int, List<Word>>()
-        asynchronium.execute(deckId) { database.wordsDao().getWordsByIdDeck(it) }
-        val response = asynchronium.getResponse()
-        response?.let { return it }
-        return listOf()
+    private  suspend fun getWords(deckId: Int): List<Word> {
+        val result = mutableListOf<Word>()
+        withContext(Dispatchers.IO) {
+            val words = async {
+                database.wordsDao().getWordsByDeckId(deckId)
+            }
+            result.addAll(words.await())
+        }
+        return result
     }
-
 }

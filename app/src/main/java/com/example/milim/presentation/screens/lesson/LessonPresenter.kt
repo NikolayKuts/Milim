@@ -2,12 +2,10 @@ package com.example.milim.presentation.screens.lesson
 
 import android.content.Context
 import com.example.milim.data.MilimDatabase
-import com.example.milim.domain.Asynchronium
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
 import com.example.milim.interfaces.LessonView
 import kotlinx.coroutines.*
-import kotlin.math.max
 
 class LessonPresenter(private val view: LessonView, context: Context) {
     private val database = MilimDatabase.getInstance(context)
@@ -84,7 +82,7 @@ class LessonPresenter(private val view: LessonView, context: Context) {
         val result = mutableListOf<Word>()
         withContext(Dispatchers.IO) {
             val words = async {
-                database.wordsDao().getWordsByIdDeck(deckId)
+                database.wordsDao().getWordsByDeckId(deckId)
             }
             result.addAll(words.await())
         }

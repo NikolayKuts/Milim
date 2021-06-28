@@ -10,7 +10,6 @@ import kotlinx.coroutines.*
 
 class MainPresenter(private val view: MainView, private val context: Context) {
     private val database = MilimDatabase.getInstance(context)
-
     private val scope = CoroutineScope(Dispatchers.IO)
     var dialogHelper: DialogHelper? = null
 
@@ -32,7 +31,33 @@ class MainPresenter(private val view: MainView, private val context: Context) {
                     dialogHelper?.dismissDialog()
                 }
             }
+        }
+    }
 
+    fun deleteDeck(deck: Deck) {
+        scope.launch {
+            database.decksDao().deleteDeck(deck.id)
+            withContext(Dispatchers.Main) {
+                view.showData(getAllDecks())
+            }
+        }
+    }
+
+    fun loadData() {
+        scope.launch {
+            withContext(Dispatchers.Main) {
+                view.showData(getAllDecks())
+            }
+        }
+    }
+
+    fun renameDeck(oldDeck: Deck, newDeck: Deck) {
+        deleteDeck(oldDeck)
+        scope.launch {
+            insertDeck(newDeck)
+            withContext(Dispatchers.Main) {
+                view.showData(getAllDecks())
+            }
         }
     }
 
@@ -47,15 +72,6 @@ class MainPresenter(private val view: MainView, private val context: Context) {
             val newDeckId = getMaxDeckId() + 1
             val newDeck = Deck(newDeckId, deckName)
             insertDeck(newDeck)
-        }
-    }
-
-    fun deleteDeck(deck: Deck) {
-        scope.launch {
-            database.decksDao().deleteDeck(deck.id)
-            withContext(Dispatchers.Main) {
-                view.showData(getAllDecks())
-            }
         }
     }
 
@@ -105,24 +121,6 @@ class MainPresenter(private val view: MainView, private val context: Context) {
                 }
                 val updatedDeck = Deck(deck.id, deck.name, quantityWords, progress)
                 database.decksDao().addDeck(updatedDeck)
-            }
-        }
-    }
-
-    fun loadData() {
-        scope.launch {
-            withContext(Dispatchers.Main) {
-                view.showData(getAllDecks())
-            }
-        }
-    }
-
-    fun renameDeck(oldDeck: Deck, newDeck: Deck) {
-        deleteDeck(oldDeck)
-        scope.launch {
-            insertDeck(newDeck)
-            withContext(Dispatchers.Main) {
-            view.showData(getAllDecks())
             }
         }
     }

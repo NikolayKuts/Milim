@@ -9,7 +9,7 @@ import com.example.milim.domain.pojo.Word
 @Dao
 interface WordsDao {
     @Query("SELECT * FROM words WHERE deckId = :deckId")
-    fun getWordsByIdDeck(deckId: Int): List<Word>
+    fun getWordsByDeckId(deckId: Int): List<Word>
 
     @Query("SELECT * FROM words WHERE wordId = :wordId")
     fun getWordById(wordId: Int): Word
