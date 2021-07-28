@@ -129,12 +129,12 @@ class MainActivity : AppCompatActivity(),
         dialog.setContentView(dialogView)
         binding.editTextDeckName.setText("")
         dialog.show()
-        presenter.dialogHelper = MainPresenter.DialogHelper { dialog.dismiss() }
+        //presenter. = MainPresenter.DialogHelper { dialog.dismiss() }
         binding.buttonCancelDeckCreation.setOnClickListener { dialog.dismiss() }
         binding.buttonCreateDeck.setOnClickListener {
             val deckName = binding.editTextDeckName.text.toString().trim()
             if (deckName.isNotEmpty()) {
-                presenter.onAddDeck(deckName)
+                presenter.onAddDeck(deckName) { dialog.dismiss() }
             } else {
                 Toast.makeText(applicationContext, "Type deck name", Toast.LENGTH_LONG)
                     .show()
