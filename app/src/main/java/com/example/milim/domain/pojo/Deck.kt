@@ -14,4 +14,6 @@ data class Deck(
     val name: String,
     val size: Int = 0,
     val progress: Int = 0
-) : Serializable
+) : Serializable {
+    constructor(): this(-1, "empty")
+}
