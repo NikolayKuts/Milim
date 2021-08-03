@@ -92,6 +92,12 @@ class LessonActivity : AppCompatActivity(),
         setOnLongClickListenerAccordingToWordsList()
     }
 
+    override fun onUpdateDeck(deck: Deck) {
+        lessonProgress = deck.progress
+        setViewContent()
+        setOnLongClickListenerAccordingToWordsList()
+    }
+
     override fun onActionPerformedRefresh() {
         presenter.reloadData(deckId)
     }
@@ -144,6 +150,7 @@ class LessonActivity : AppCompatActivity(),
 
     private fun setViewContent() {
         with(binding) {
+            textViewDeckName.text = deckName
             if (words.size == 0) {
                 textViewLessonWord.text = "The deck is empty"
                 textViewProgress.text = (0).toString()

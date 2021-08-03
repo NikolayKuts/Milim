@@ -6,4 +6,5 @@ interface MainView {
     fun showData(decksFromDB: List<Deck>)
     fun showToastIfDeckExist()
     fun showToastOnDeckCreated()
+    fun showToastOnDeckDeleted()
 }

@@ -11,17 +11,23 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.milim.R
+import com.example.milim.data.LessonFirebaseRepositoryImp
+import com.example.milim.data.MainFirebaseRepositoryImp
+import com.example.milim.data.MilimFirebase
 import com.example.milim.presentation.adapters.DeckAdapter
 import com.example.milim.databinding.*
 import com.example.milim.presentation.fragments.DeckRenamingFragment
 import com.example.milim.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
+import com.example.milim.domain.pojo.Word
 import com.example.milim.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(),
@@ -78,13 +84,17 @@ class MainActivity : AppCompatActivity(),
 //        Log.i("file_dir", "name: ${someDeck.name}, id: ${someDeck.id}, size: ${someDeck.size} progress: ${someDeck.progress}")
 
 
-//        val list = getString(R.string.string_of_words1).split("|_|").take(10)
+//        val list = getString(R.string.string_of_words1).split("|_|")
 //
-//        presenter.addDeck(Deck(1, "Deck_1"))
+////        presenter.onAddDeck(Deck(1, "Deck_1")) {}
+//        presenter.onAddDeck("Deck_1") {}
 //
 //        var wordId = 1
-//        val words = list.map { Word(wordId++, 1, it) }.take(5)
-//        presenter.addWordList(words)
+//        list.map { Word(wordId++, 1, it) }.forEach { word ->
+//            CoroutineScope(Dispatchers.IO).launch {  MilimFirebase().insertWordAsync(word).await()}
+//        }
+//
+////        presenter.addWordList(words)
 //        adapter.notifyDataSetChanged()
 
 
@@ -107,6 +117,24 @@ class MainActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         presenter.loadData()
+
+
+
+//        Firebase.firestore.collection("words_collection")
+//            .document()
+//            .set(Word(1, 8, "test_word"))
+
+
+//        val decks = generateSequence(Deck(0, "name0")) { deck ->
+//            Deck(
+//                deck.id + 1,
+//                deck.name.substring(0..3) + (deck.name.subSequence(4, 5).toString().toInt() + 1)
+//            )
+//        }.take(10)
+//
+//        decks.forEach {
+//            Firebase.firestore.collection("decks_collection").document().set(it)
+//        }
     }
 
     override fun showToastIfDeckExist() {
@@ -117,6 +145,11 @@ class MainActivity : AppCompatActivity(),
     override fun showToastOnDeckCreated() {
         Toast.makeText(applicationContext, "the deck has been created", Toast.LENGTH_LONG)
             .show()
+    }
+
+
+    override fun showToastOnDeckDeleted() {
+        Toast.makeText(applicationContext, "the deck has been deleted", Toast.LENGTH_SHORT).show()
     }
 
     fun onMainActivityButtonClick(view: View) {
@@ -131,7 +164,6 @@ class MainActivity : AppCompatActivity(),
         dialog.setContentView(dialogView)
         binding.editTextDeckName.setText("")
         dialog.show()
-        //presenter. = MainPresenter.DialogHelper { dialog.dismiss() }
         binding.buttonCancelDeckCreation.setOnClickListener { dialog.dismiss() }
         binding.buttonCreateDeck.setOnClickListener {
             val deckName = binding.editTextDeckName.text.toString().trim()
@@ -154,6 +186,7 @@ class MainActivity : AppCompatActivity(),
         val buttonRenameDeck = dialog.findViewById<Button>(R.id.button_rename_deck)
 
         textViewDeckDialogTitle.text = deck.name
+
         buttonDeleteDeck.setOnClickListener {
             showDeckDeletingDialog(context, deck)
             dialog.dismiss()
@@ -192,8 +225,6 @@ class MainActivity : AppCompatActivity(),
         binding.buttonDeleteDeck.setOnClickListener {
             presenter.deleteDeck(deck)
             dialog.dismiss()
-            Toast.makeText(context, "The deck has been deleted", Toast.LENGTH_SHORT)
-                .show()
         }
     }
 

@@ -9,12 +9,11 @@ import kotlinx.coroutines.*
 class MainRoomRepositoryImp(private val view: MainView, context: Context) : MainRepository {
     private val database = MilimDatabase.getInstance(context)
     private val scope = CoroutineScope(Dispatchers.IO)
+
     override fun onAddDeck(deckName: String, dismissDialog: () -> Unit) {
         scope.launch {
             if (isDeckExist(deckName)) {
-                withContext(Dispatchers.Main) {
-                    view.showToastIfDeckExist()
-                }
+                withContext(Dispatchers.Main) { view.showToastIfDeckExist() }
             } else {
                 addNewDeck(deckName)
                 withContext(Dispatchers.Main) {
@@ -29,17 +28,13 @@ class MainRoomRepositoryImp(private val view: MainView, context: Context) : Main
     override fun deleteDeck(deck: Deck) {
         scope.launch {
             database.decksDao().deleteDeck(deck.id)
-            withContext(Dispatchers.Main) {
-                view.showData(getAllDecks())
-            }
+            withContext(Dispatchers.Main) { view.showData(getAllDecks()) }
         }
     }
 
     override fun loadData() {
         scope.launch {
-            withContext(Dispatchers.Main) {
-                view.showData(getAllDecks())
-            }
+            withContext(Dispatchers.Main) { view.showData(getAllDecks()) }
         }
     }
 
@@ -47,9 +42,7 @@ class MainRoomRepositoryImp(private val view: MainView, context: Context) : Main
         deleteDeck(oldDeck)
         scope.launch {
             insertDeck(newDeck)
-            withContext(Dispatchers.Main) {
-                view.showData(getAllDecks())
-            }
+            withContext(Dispatchers.Main) { view.showData(getAllDecks()) }
         }
     }
 
@@ -73,9 +66,7 @@ class MainRoomRepositoryImp(private val view: MainView, context: Context) : Main
     }
 
     private suspend fun insertDeck(deck: Deck) {
-        withContext(Dispatchers.IO) {
-            database.decksDao().addDeck(deck)
-        }
+        withContext(Dispatchers.IO) { database.decksDao().addDeck(deck) }
     }
 
     private suspend fun getAllDecks(): List<Deck> {
