@@ -14,6 +14,7 @@ data class Word(
     val deckId: Int,
     val word: String
 ) : Parcelable {
+    constructor() : this(deckId = -1, word = "empty")
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readInt(),
