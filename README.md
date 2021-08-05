@@ -10,6 +10,8 @@ Allows you to create lists and fill them with words that can be repeated by swip
 * For asynchronous operations used Coroutines
 * Access to databases via Firebase and Room
 
+### Compatibility
+From API level 19 to 30
 
 **Activity with lists of words:**
 
