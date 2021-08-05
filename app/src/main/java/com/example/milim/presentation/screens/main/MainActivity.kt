@@ -87,14 +87,14 @@ class MainActivity : AppCompatActivity(),
 //        val list = getString(R.string.string_of_words1).split("|_|")
 //
 ////        presenter.onAddDeck(Deck(1, "Deck_1")) {}
-//        presenter.onAddDeck("Deck_1") {}
+//        presenter.onAddDeck("Deck_2") {}
 //
 //        var wordId = 1
-//        list.map { Word(wordId++, 1, it) }.forEach { word ->
+//        list.map { Word(wordId++, 2, it) }.take(200).forEach { word ->
 //            CoroutineScope(Dispatchers.IO).launch {  MilimFirebase().insertWordAsync(word).await()}
 //        }
-//
-////        presenter.addWordList(words)
+
+//        presenter.addWordList(words)
 //        adapter.notifyDataSetChanged()
 
 
