@@ -9,14 +9,14 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import com.example.milim.R
 import com.example.milim.databinding.DialogFragmentWordEditionBinding
 import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Word
 
 class EditionWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordEditionBinding? = null
-    private val binding
-        get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var listener: ListenerCallback
     private lateinit var dataUpdater: OnActionPerformedUpdater
 
@@ -37,15 +37,15 @@ class EditionWordFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as ListenerCallback
-        dataUpdater = context as OnActionPerformedUpdater
+        if (context is ListenerCallback) { listener = context }
+        if (context is OnActionPerformedUpdater) { dataUpdater = context }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentWordEditionBinding
@@ -68,27 +68,38 @@ class EditionWordFragment : DialogFragment() {
         binding.buttonConfirmChanges.setOnClickListener {
             when (val changedWord = binding.editTextEditionWord.text.toString().trim()) {
                 wordObject?.word -> {
-                    Toast.makeText(it.context, "The word isn't changed", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        context,
+                        getString(R.string.toas_the_word_isnt_changed),
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                 }
                 "" -> {
-                    Toast.makeText(it.context, "Type a word", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        getString(R.string.toast_type_a_word),
+                        Toast.LENGTH_SHORT
+                    )
+                        .show()
                 }
                 else -> {
                     wordObject?.let { word ->
                         listener.onConfirmChanges(Word(word.wordId, word.deckId, changedWord))
                         dataUpdater.onActionPerformedRefresh()
                         dismiss()
-                        Toast.makeText(view.context, "The word has been changed", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            view.context,
+                            getString(R.string.toas_the_word_has_been_changed),
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                     }
                 }
             }
         }
 
-        binding.buttonCancelChanges.setOnClickListener {
-            dismiss()
-        }
+        binding.buttonCancelChanges.setOnClickListener { dismiss() }
     }
 
     override fun onDestroy() {

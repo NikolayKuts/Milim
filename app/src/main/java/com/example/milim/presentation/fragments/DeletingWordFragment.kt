@@ -12,8 +12,7 @@ import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 
 class DeletingWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordDeletingBinding? = null
-    private val binding
-    get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var listener: ListenerCallback
     private lateinit var dataUpdater: OnActionPerformedUpdater
 
@@ -29,21 +28,20 @@ class DeletingWordFragment : DialogFragment() {
     }
 
     interface ListenerCallback {
-        //fun onDeleteWordRefreshData()
         fun onConfirmWordDeleting()
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as ListenerCallback
-        dataUpdater = context as OnActionPerformedUpdater
+        if (context is ListenerCallback) { listener = context }
+        if (context is OnActionPerformedUpdater) { dataUpdater = context }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentWordDeletingBinding
@@ -59,14 +57,11 @@ class DeletingWordFragment : DialogFragment() {
             dismiss()
         }
 
-        binding.buttonCancelDeleting.setOnClickListener {
-            dismiss()
-        }
+        binding.buttonCancelDeleting.setOnClickListener { dismiss() }
     }
 
     override fun onDestroy() {
         _binding = null
         super.onDestroy()
     }
-
 }
