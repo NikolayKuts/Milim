@@ -1,4 +1,4 @@
-package com.example.milim.data
+package com.example.milim.data.databases
 
 import android.content.Context
 import androidx.room.Database

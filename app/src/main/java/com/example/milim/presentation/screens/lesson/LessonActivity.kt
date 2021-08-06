@@ -16,10 +16,10 @@ import com.example.milim.databinding.DialogLessonCounterBinding
 import com.example.milim.presentation.fragments.AdditionWordFragment
 import com.example.milim.presentation.fragments.DeletingWordFragment
 import com.example.milim.presentation.fragments.EditionWordFragment
-import com.example.milim.interfaces.OnActionPerformedUpdater
+import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.LessonView
+import com.example.milim.presentation.interfaces.LessonView
 
 class LessonActivity : AppCompatActivity(),
     DeletingWordFragment.ListenerCallback,

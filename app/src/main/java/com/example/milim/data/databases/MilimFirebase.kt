@@ -1,4 +1,4 @@
-package com.example.milim.data
+package com.example.milim.data.databases
 
 import com.example.milim.data.dao.FirebaseDecksDao
 import com.example.milim.data.dao.FirebaseWordsDao

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentWordDeletingBinding
-import com.example.milim.interfaces.OnActionPerformedUpdater
+import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 
 class DeletingWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordDeletingBinding? = null

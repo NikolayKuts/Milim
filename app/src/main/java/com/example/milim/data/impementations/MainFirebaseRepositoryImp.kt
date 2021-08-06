@@ -1,8 +1,9 @@
-package com.example.milim.data
+package com.example.milim.data.impementations
 
-import com.example.milim.domain.MainRepository
+import com.example.milim.data.databases.MilimFirebase
+import com.example.milim.data.repositories.MainRepository
 import com.example.milim.domain.pojo.Deck
-import com.example.milim.interfaces.MainView
+import com.example.milim.presentation.interfaces.MainView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

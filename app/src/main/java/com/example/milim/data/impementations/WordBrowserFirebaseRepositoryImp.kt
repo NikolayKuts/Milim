@@ -1,13 +1,13 @@
-package com.example.milim.data.dao
+package com.example.milim.data.impementations
 
-import com.example.milim.data.MilimFirebase
-import com.example.milim.domain.WordBrowserRepository
-import com.example.milim.interfaces.WordBrowserView
+import com.example.milim.data.databases.MilimFirebase
+import com.example.milim.data.repositories.WordBrowserRepository
+import com.example.milim.presentation.interfaces.WordBrowserView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class WordBrowserFirebaseRepositoryImp() : WordBrowserRepository {
+class WordBrowserFirebaseRepositoryImp : WordBrowserRepository {
     private val database = MilimFirebase()
     private val scope = CoroutineScope(Dispatchers.Main)
 

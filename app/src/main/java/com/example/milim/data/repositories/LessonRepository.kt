@@ -1,4 +1,4 @@
-package com.example.milim.domain
+package com.example.milim.data.repositories
 
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word

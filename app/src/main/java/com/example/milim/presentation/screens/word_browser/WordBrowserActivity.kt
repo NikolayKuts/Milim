@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.milim.presentation.adapters.WordBrowserAdapter
 import com.example.milim.databinding.ActivityWordBrowserBinding
 import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.WordBrowserView
+import com.example.milim.presentation.interfaces.WordBrowserView
 
 class WordBrowserActivity : AppCompatActivity(), WordBrowserView {
     private lateinit var presenter: WordBrowserPresenter

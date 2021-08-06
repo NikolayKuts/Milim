@@ -1,9 +1,10 @@
-package com.example.milim.data
+package com.example.milim.data.impementations
 
 import android.content.Context
-import com.example.milim.domain.MainRepository
+import com.example.milim.data.databases.MilimDatabase
+import com.example.milim.data.repositories.MainRepository
 import com.example.milim.domain.pojo.Deck
-import com.example.milim.interfaces.MainView
+import com.example.milim.presentation.interfaces.MainView
 import kotlinx.coroutines.*
 
 class MainRoomRepositoryImp(private val view: MainView, context: Context) : MainRepository {

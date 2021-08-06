@@ -1,9 +1,10 @@
-package com.example.milim.data
+package com.example.milim.data.impementations
 
-import com.example.milim.domain.LessonRepository
+import com.example.milim.data.databases.MilimFirebase
+import com.example.milim.data.repositories.LessonRepository
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.LessonView
+import com.example.milim.presentation.interfaces.LessonView
 import kotlinx.coroutines.*
 
 class LessonFirebaseRepositoryImp(private val view: LessonView) : LessonRepository {

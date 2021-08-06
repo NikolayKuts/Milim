@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import com.example.milim.databinding.DialogFragmentDeckRenamingBinding
-import com.example.milim.interfaces.OnActionPerformedUpdater
+import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
 
 class DeckRenamingFragment : DialogFragment() {
