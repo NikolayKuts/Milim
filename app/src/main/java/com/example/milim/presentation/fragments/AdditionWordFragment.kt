@@ -8,17 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import com.example.milim.R
 import com.example.milim.databinding.DialogFragmentWordAdditionBinding
 import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
-import com.example.milim.presentation.screens.main.MainPresenter
 
 class AdditionWordFragment : DialogFragment() {
     private var _binding: DialogFragmentWordAdditionBinding? = null
-    private val binding
-    get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var dataUpdater: OnActionPerformedUpdater
     private var listener: ListenerCallback? = null
-    private var deckId = -1;
+    private var deckId = -1
 
     companion object {
         private const val TAG_DECK_ID = "deck_id"
@@ -37,15 +36,15 @@ class AdditionWordFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        dataUpdater = context as OnActionPerformedUpdater
-        listener = context as ListenerCallback
+        if (context is OnActionPerformedUpdater) { dataUpdater = context }
+        if (context is ListenerCallback) { listener = context }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentWordAdditionBinding.inflate(inflater, container, false)
@@ -54,26 +53,30 @@ class AdditionWordFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            deckId = it.getInt(TAG_DECK_ID)
-        }
+        arguments?.let { deckId = it.getInt(TAG_DECK_ID) }
 
-        binding.buttonCancelWordAdding.setOnClickListener {
-            dismiss()
-        }
+        binding.buttonCancelWordAdding.setOnClickListener { dismiss() }
 
         binding.buttonAddWord.setOnClickListener {
             val newWord = binding.editTextNewWord.text.toString()
             if (newWord != "") {
-
-                //insetWord(it.context, newWord, deckId)
-                    listener?.onConformWordAddition(newWord, deckId)
+                listener?.onConformWordAddition(newWord, deckId)
                 binding.editTextNewWord.setText("")
-                Toast.makeText(it.context, "The word has been added", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.toast_the_word_has_been_added),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
                 dataUpdater.onActionPerformedRefresh()
                 dismiss()
             } else {
-                Toast.makeText(it.context, "Type a word", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    it.context,
+                    getString(R.string.toast_type_a_word),
+                    Toast.LENGTH_SHORT
+                )
+                    .show()
             }
         }
     }
@@ -82,9 +85,4 @@ class AdditionWordFragment : DialogFragment() {
         _binding = null
         super.onDestroyView()
     }
-
-//    private fun insetWord(context: Context, newWord: String, deckId: Int) {
-//        val presenter = MainPresenter(context)
-//        presenter.addWord(newWord, deckId)
-//    }
 }

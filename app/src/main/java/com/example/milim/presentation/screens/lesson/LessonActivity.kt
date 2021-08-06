@@ -44,10 +44,7 @@ class LessonActivity : AppCompatActivity(),
         private const val TAG_DECK_ID = "deck_id"
         fun newIntent(context: Context, deck_id: Int): Intent {
             return Intent(context, LessonActivity::class.java).apply {
-                putExtra(
-                    TAG_DECK_ID,
-                    deck_id
-                )
+                putExtra(TAG_DECK_ID, deck_id)
             }
         }
     }
@@ -124,7 +121,7 @@ class LessonActivity : AppCompatActivity(),
         presenter.updateWord(wordObject)
     }
 
-    fun onNextClick(view: View) {
+    fun onNextClick(@Suppress("UNUSED_PARAMETER")view: View) {
         if (words.isNotEmpty()) {
             wordIndex++
             if (wordIndex == words.size) {
@@ -136,7 +133,7 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    fun onBackClick(view: View) {
+    fun onBackClick(@Suppress("UNUSED_PARAMETER")view: View) {
         if (words.isNotEmpty()) {
             wordIndex--
             if (wordIndex < 0) {
@@ -152,7 +149,7 @@ class LessonActivity : AppCompatActivity(),
         with(binding) {
             textViewDeckName.text = deckName
             if (words.size == 0) {
-                textViewLessonWord.text = "The deck is empty"
+                textViewLessonWord.text = getString(R.string.the_deck_is_empty)
                 textViewProgress.text = (0).toString()
             } else {
                 textViewLessonWord.text = words[wordIndex].word
@@ -162,7 +159,7 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    fun onMainButtonClick(view: View) {
+    fun onMainButtonClick(@Suppress("UNUSED_PARAMETER")view: View) {
         val animationAddButton: Animation
         val animationDeleteButton: Animation
         val clickable: Boolean
@@ -192,7 +189,7 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    fun onDeleteButtonClick(view: View) {
+    fun onDeleteButtonClick(@Suppress("UNUSED_PARAMETER")view: View) {
         if (words.isEmpty()) {
             Toast.makeText(
                 applicationContext,
@@ -206,7 +203,7 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    fun onAddWordButtonClick(view: View) {
+    fun onAddWordButtonClick(@Suppress("UNUSED_PARAMETER")view: View) {
         val dialog = AdditionWordFragment.newInstance(deckId)
         dialog.show(supportFragmentManager, TAG_WORD_ADDITION_DIALOG)
     }
@@ -254,7 +251,6 @@ class LessonActivity : AppCompatActivity(),
         }
     }
 
-    // is repeated
     private fun showCounterDialog(context: Context) {
         val dialog = Dialog(context)
         val binding = DialogLessonCounterBinding.inflate(layoutInflater)
@@ -274,7 +270,11 @@ class LessonActivity : AppCompatActivity(),
                 saveProgress()
                 dialog.dismiss()
             } else {
-                Toast.makeText(context, "There's not word with such number", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    context,
+                    getString(R.string.theres_no_word_with_such_number),
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
         }

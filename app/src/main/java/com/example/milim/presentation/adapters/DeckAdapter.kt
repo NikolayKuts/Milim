@@ -11,7 +11,7 @@ import com.example.milim.databinding.ItemDeckBinding
 import com.example.milim.domain.pojo.Deck
 import java.util.regex.Pattern
 
-class DeckAdapter(var decks: List<Deck>, val context: Context) :
+class DeckAdapter(private var decks: List<Deck>, val context: Context) :
     RecyclerView.Adapter<DeckAdapter.DeckViewHolder>() {
 
     var onDeckLongClickListener: OnDeckLongClickListener? = null
@@ -72,9 +72,7 @@ class DeckAdapter(var decks: List<Deck>, val context: Context) :
         }
     }
 
-    inner class DeckViewHolder(val binding: ItemDeckBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-    }
+    inner class DeckViewHolder(val binding: ItemDeckBinding) : RecyclerView.ViewHolder(binding.root)
 
     fun interface OnDeckLongClickListener {
         fun onLongClick(deck: Deck)

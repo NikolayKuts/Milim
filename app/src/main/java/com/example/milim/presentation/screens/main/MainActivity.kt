@@ -19,6 +19,8 @@ import com.example.milim.domain.pojo.Deck
 import com.example.milim.presentation.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
 
 class MainActivity : AppCompatActivity(),
     OnActionPerformedUpdater,
@@ -52,42 +54,12 @@ class MainActivity : AppCompatActivity(),
         adapter = DeckAdapter(decks, applicationContext)
         recyclerView.adapter = adapter
 
-        adapter.onDeckLongClickListener = DeckAdapter.OnDeckLongClickListener {
-            showDeckDialog(view.context, it)
+        adapter.onDeckLongClickListener = DeckAdapter.OnDeckLongClickListener { deck ->
+            showDeckDialog(view.context, deck)
         }
-        adapter.onDeckClickListener = object : DeckAdapter.OnDeckClickListener {
-            override fun onClick(deck: Deck) {
-                startActivity(LessonActivity.newIntent(this@MainActivity, deck.id))
-            }
+        adapter.onDeckClickListener = DeckAdapter.OnDeckClickListener { deck ->
+            startActivity(LessonActivity.newIntent(this@MainActivity, deck.id))
         }
-
-//        val someObject = presenter.getDeckById(decks[0].id)
-//        val outputStream = openFileOutput(FILE_NAME, MODE_PRIVATE)
-//        val objectOutPutStream = ObjectOutputStream(outputStream)
-//        objectOutPutStream.writeObject(someObject)
-//        Log.i("file_dir", "onCreate: $filesDir")
-
-//        val assetsManager = applicationContext.assets
-//        val inputStream = assetsManager.open(FILE_NAME)
-//        val objectOutputStream = ObjectInputStream(inputStream)
-//        val someDeck = objectOutputStream.readObject() as Deck
-//        Log.i("file_dir", "name: ${someDeck.name}, id: ${someDeck.id}, size: ${someDeck.size} progress: ${someDeck.progress}")
-
-
-//        val list = getString(R.string.string_of_words1).split("|_|")
-//
-////        presenter.onAddDeck(Deck(1, "Deck_1")) {}
-//        presenter.onAddDeck("Deck_2") {}
-//
-//        var wordId = 1
-//        list.map { Word(wordId++, 2, it) }.take(200).forEach { word ->
-//            CoroutineScope(Dispatchers.IO).launch {  MilimFirebase().insertWordAsync(word).await()}
-//        }
-
-//        presenter.addWordList(words)
-//        adapter.notifyDataSetChanged()
-
-
     }
 
     override fun showData(decksFromDB: List<Deck>) {
@@ -107,39 +79,34 @@ class MainActivity : AppCompatActivity(),
     override fun onResume() {
         super.onResume()
         presenter.loadData()
-
-
-
-//        Firebase.firestore.collection("words_collection")
-//            .document()
-//            .set(Word(1, 8, "test_word"))
-
-
-//        val decks = generateSequence(Deck(0, "name0")) { deck ->
-//            Deck(
-//                deck.id + 1,
-//                deck.name.substring(0..3) + (deck.name.subSequence(4, 5).toString().toInt() + 1)
-//            )
-//        }.take(10)
-//
-//        decks.forEach {
-//            Firebase.firestore.collection("decks_collection").document().set(it)
-//        }
     }
 
     override fun showToastIfDeckExist() {
-        Toast.makeText(applicationContext, "the deck is already exist", Toast.LENGTH_LONG)
+        Toast.makeText(
+            applicationContext,
+            getString(R.string.toast_the_deck_is_already_exist),
+            Toast.LENGTH_LONG
+        )
             .show()
     }
 
     override fun showToastOnDeckCreated() {
-        Toast.makeText(applicationContext, "the deck has been created", Toast.LENGTH_LONG)
+        Toast.makeText(
+            applicationContext,
+            getString(R.string.toast_the_deck_has_been_created),
+            Toast.LENGTH_LONG
+        )
             .show()
     }
 
 
     override fun showToastOnDeckDeleted() {
-        Toast.makeText(applicationContext, "the deck has been deleted", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            applicationContext,
+            getString(R.string.toast_the_deck_has_been_deleted),
+            Toast.LENGTH_SHORT
+        )
+            .show()
     }
 
     fun onMainActivityButtonClick(view: View) {
@@ -160,7 +127,11 @@ class MainActivity : AppCompatActivity(),
             if (deckName.isNotEmpty()) {
                 presenter.onAddDeck(deckName) { dialog.dismiss() }
             } else {
-                Toast.makeText(applicationContext, "Type deck name", Toast.LENGTH_LONG)
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.toast_type_deck_name),
+                    Toast.LENGTH_LONG
+                )
                     .show()
             }
         }
@@ -188,9 +159,10 @@ class MainActivity : AppCompatActivity(),
             } else {
                 Toast.makeText(
                     applicationContext,
-                    "There are not words in this deck",
+                    getString(R.string.toast_there_are_no_words_in_this_deck),
                     Toast.LENGTH_SHORT
-                ).show()
+                )
+                    .show()
             }
         }
         buttonRenameDeck.setOnClickListener {
@@ -210,12 +182,25 @@ class MainActivity : AppCompatActivity(),
         dialog.setContentView(view)
         dialog.show()
         binding.textViewDeckDeletingTitle.text =
-            "Would you like to delete the deck \"${deck.name}\"?"
+            getString(R.string.toast_would_you_like_to_delete_the_deck, deck.name)
         binding.buttonCancelDeleting.setOnClickListener { dialog.dismiss() }
         binding.buttonDeleteDeck.setOnClickListener {
             presenter.deleteDeck(deck)
             dialog.dismiss()
         }
+    }
+
+    private fun getDeckFromAssets(): Deck {
+        val assetsManager = applicationContext.assets
+        val inputStream = assetsManager.open(FILE_NAME)
+        val objectOutputStream = ObjectInputStream(inputStream)
+        return objectOutputStream.readObject() as Deck
+    }
+
+    private fun writeDeckIntoFile(deck: Deck) {
+        val outputStream = openFileOutput(FILE_NAME, MODE_PRIVATE)
+        val objectOutPutStream = ObjectOutputStream(outputStream)
+        objectOutPutStream.writeObject(deck)
     }
 
 }
