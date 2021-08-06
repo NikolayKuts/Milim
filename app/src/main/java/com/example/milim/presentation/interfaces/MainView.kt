@@ -1,4 +1,4 @@
-package com.example.milim.interfaces
+package com.example.milim.presentation.interfaces
 
 import com.example.milim.domain.pojo.Deck
 

@@ -11,24 +11,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.milim.R
-import com.example.milim.data.LessonFirebaseRepositoryImp
-import com.example.milim.data.MainFirebaseRepositoryImp
-import com.example.milim.data.MilimFirebase
 import com.example.milim.presentation.adapters.DeckAdapter
 import com.example.milim.databinding.*
 import com.example.milim.presentation.fragments.DeckRenamingFragment
-import com.example.milim.interfaces.OnActionPerformedUpdater
+import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
-import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.MainView
+import com.example.milim.presentation.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity(),
     OnActionPerformedUpdater,

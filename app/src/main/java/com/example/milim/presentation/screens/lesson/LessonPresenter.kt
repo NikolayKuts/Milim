@@ -1,12 +1,11 @@
 package com.example.milim.presentation.screens.lesson
 
 import android.content.Context
-import com.example.milim.data.LessonFirebaseRepositoryImp
-import com.example.milim.data.LessonRoomRepositoryImp
-import com.example.milim.domain.LessonRepository
+import com.example.milim.data.impementations.LessonFirebaseRepositoryImp
+import com.example.milim.data.repositories.LessonRepository
 import com.example.milim.domain.pojo.Deck
 import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.LessonView
+import com.example.milim.presentation.interfaces.LessonView
 
 class LessonPresenter(view: LessonView, context: Context) {
 //    private val repository: LessonRepository = LessonRoomRepositoryImp(view, context)
