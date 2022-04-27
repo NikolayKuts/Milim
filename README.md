@@ -31,4 +31,4 @@ From API level 19 to 30
 
 **Word repetition activity:**
 
-![5](https://github.com/NikolayKuts/Milim/blob/firebase_database/screens/repeation_screen.JPEG)
+![5](https://github.com/NikolayKuts/Milim/blob/firebase_database/screens/repeation_screen.png)
