@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -11,14 +12,20 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.milim.R
+import com.example.milim.data.databases.MilimFirebase
+import com.example.milim.data.impementations.MainFirebaseRepositoryImp
 import com.example.milim.presentation.adapters.DeckAdapter
 import com.example.milim.databinding.*
 import com.example.milim.presentation.fragments.DeckRenamingFragment
 import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
+import com.example.milim.domain.pojo.Word
 import com.example.milim.presentation.interfaces.MainView
 import com.example.milim.presentation.screens.lesson.LessonActivity
 import com.example.milim.presentation.screens.word_browser.WordBrowserActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ObjectInputStream
 import java.io.ObjectOutputStream
 
@@ -62,10 +69,87 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    fun doIt() {
+        val firestore = MilimFirebase()
+        val scope = CoroutineScope(Dispatchers.IO)
+
+        val words = getString(R.string.string_of_words1).split("|_|")
+        scope.launch {
+            Log.i("app_log", "size -> " + words.size.toString())
+
+            firestore.addDeckAsync(Deck(id = 1, name = "deck 1", size = words.size, progress = 1))
+
+            words.onEachIndexed { index, word ->
+                launch {
+                    val wordId = index
+                    firestore.insertWordAsync(Word(deckId = 1, word = word, wordId = wordId))
+                }
+            }
+        }
+
+        val words2 = getString(R.string.string_of_words2).split("@")
+        scope.launch {
+            Log.i("app_log", "size -> " + words2.size.toString())
+
+            firestore.addDeckAsync(Deck(id = 2, name = "deck 2", size = words2.size, progress = 1))
+
+            words2.onEachIndexed { index, word ->
+                launch {
+                    val wordId = index + words.size + 1
+                    firestore.insertWordAsync(Word(deckId = 2, word = word, wordId = wordId))
+                }
+            }
+        }
+
+        val words3 = getString(R.string.string_of_words3).split("@")
+        scope.launch {
+            Log.i("app_log", "size -> " + words3.size.toString())
+
+            firestore.addDeckAsync(Deck(id = 3, name = "deck 3", size = words3.size, progress = 1))
+
+            words3.onEachIndexed { index, word ->
+                launch {
+                    val wordId = index + words.size + words2.size + 1
+                    firestore.insertWordAsync(Word(deckId = 3, word = word, wordId = wordId))
+                }
+            }
+        }
+//
+        val words4 = getString(R.string.string_of_words4).split("@")
+        scope.launch {
+            Log.i("app_log", "size -> " + words4.size.toString())
+
+            firestore.addDeckAsync(Deck(id = 4, name = "deck 4", size = words4.size, progress = 1))
+
+            words4.onEachIndexed { index, word ->
+                launch {
+                    val wordId = index + words.size + words2.size + words3.size + 1
+                    firestore.insertWordAsync(Word(deckId = 4, word = word, wordId = wordId))
+                }
+            }
+        }
+
+        val words5 = getString(R.string.string_of_words5).split("@")
+        scope.launch {
+            Log.i("app_log", "size -> " + words5.size.toString())
+
+            firestore.addDeckAsync(Deck(id = 5, name = "deck 5", size = words5.size, progress = 1))
+
+            words5.onEachIndexed { index, word ->
+                launch {
+                    val wordId = index + words.size + words2.size + words3.size + words4.size + 1
+                    firestore.insertWordAsync(Word(deckId = 5, word = word, wordId = wordId))
+                }
+            }
+        }
+    }
+
     override fun showData(decksFromDB: List<Deck>) {
         decks.clear()
         decks.addAll(decksFromDB)
         adapter.notifyDataSetChanged()
+
+
     }
 
     override fun onActionPerformedRefresh() {

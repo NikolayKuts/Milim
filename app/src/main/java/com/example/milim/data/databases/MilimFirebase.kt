@@ -1,5 +1,6 @@
 package com.example.milim.data.databases
 
+import android.util.Log
 import com.example.milim.data.dao.FirebaseDecksDao
 import com.example.milim.data.dao.FirebaseWordsDao
 import com.example.milim.domain.pojo.Deck
