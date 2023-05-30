@@ -1,9 +1,10 @@
-package com.example.milim.data
+package com.example.milim.data.impementations
 
 import android.content.Context
-import com.example.milim.domain.WordBrowserRepository
+import com.example.milim.data.databases.MilimDatabase
+import com.example.milim.data.repositories.WordBrowserRepository
 import com.example.milim.domain.pojo.Word
-import com.example.milim.interfaces.WordBrowserView
+import com.example.milim.presentation.interfaces.WordBrowserView
 import kotlinx.coroutines.*
 
 class WordBrowserRoomRepositoryImp(context: Context) : WordBrowserRepository {

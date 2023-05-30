@@ -1,12 +1,13 @@
 package com.example.milim.domain.pojo
 
 import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.io.Serializable
 
-@Entity(tableName = "decks")
+private const val DECKS_TABLE_NAME = "decks"
+
+@Entity(tableName = DECKS_TABLE_NAME)
 data class Deck(
     val id: Int,
     @PrimaryKey
@@ -14,4 +15,6 @@ data class Deck(
     val name: String,
     val size: Int = 0,
     val progress: Int = 0
-) : Serializable
+) : Serializable {
+    constructor(): this(-1, "empty")
+}

@@ -6,7 +6,9 @@ import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "words")
+private const val WORDS_TABLE_NAME = "words"
+
+@Entity(tableName = WORDS_TABLE_NAME)
 data class Word(
     @PrimaryKey(autoGenerate = true)
     @NonNull
@@ -14,6 +16,7 @@ data class Word(
     val deckId: Int,
     val word: String
 ) : Parcelable {
+    constructor() : this(deckId = -1, word = "empty")
     constructor(parcel: Parcel) : this(
         parcel.readInt(),
         parcel.readInt(),

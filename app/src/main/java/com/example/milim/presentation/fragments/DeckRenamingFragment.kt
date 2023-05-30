@@ -1,6 +1,7 @@
 package com.example.milim.presentation.fragments
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +10,14 @@ import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
+import com.example.milim.R
 import com.example.milim.databinding.DialogFragmentDeckRenamingBinding
-import com.example.milim.interfaces.OnActionPerformedUpdater
+import com.example.milim.presentation.interfaces.OnActionPerformedUpdater
 import com.example.milim.domain.pojo.Deck
 
 class DeckRenamingFragment : DialogFragment() {
     private var _binding: DialogFragmentDeckRenamingBinding? = null
-    private val binding
-        get() = _binding!!
+    private val binding get() = _binding!!
     private var dataUpdater: OnActionPerformedUpdater? = null
     private var listener: ListenerCallback? = null
 
@@ -37,15 +38,19 @@ class DeckRenamingFragment : DialogFragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = context as ListenerCallback
-        dataUpdater = context as OnActionPerformedUpdater
+        if (context is ListenerCallback) {
+            listener = context
+        }
+        if (context is OnActionPerformedUpdater) {
+            dataUpdater = context
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
         _binding = DialogFragmentDeckRenamingBinding.inflate(inflater, container, false)
@@ -64,9 +69,7 @@ class DeckRenamingFragment : DialogFragment() {
             }
         }
 
-        binding.buttonCancelDeckRenaming.setOnClickListener {
-            dismiss()
-        }
+        binding.buttonCancelDeckRenaming.setOnClickListener { dismiss() }
 
         binding.buttonConformDeckRenaming.setOnClickListener { button ->
             oldDeck?.let { OldDeck ->
@@ -74,7 +77,7 @@ class DeckRenamingFragment : DialogFragment() {
                     OldDeck.name -> {
                         Toast.makeText(
                             button.context,
-                            "The OldDeck isn't changed",
+                            getString(R.string.toast_the_old_deck_isnt_changed),
                             Toast.LENGTH_SHORT
                         )
                             .show()
@@ -86,19 +89,21 @@ class DeckRenamingFragment : DialogFragment() {
                         listener?.onConformDeckRenaming(
                             OldDeck,
                             Deck(
-                                OldDeck.id,
-                                changedDeckName,
-                                OldDeck.size,
-                                OldDeck.progress
+                                id = OldDeck.id,
+                                name = changedDeckName,
+                                size = OldDeck.size,
+                                progress = OldDeck.progress
                             )
                         )
-                        //dataUpdater?.onActionPerformedRefresh()
                         dismiss()
                     }
                 }
             }
         }
+    }
 
-
+    override fun onDismiss(dialog: DialogInterface) {
+        _binding = null
+        super.onDismiss(dialog)
     }
 }
